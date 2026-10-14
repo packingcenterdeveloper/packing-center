@@ -1,0 +1,12 @@
+{
+  "name": "packing-center",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "api:dev": "pnpm --filter api dev",
+    "api:build": "pnpm --filter api build",
+    "api:start": "pnpm --filter api start",
+    "api:typecheck": "pnpm --filter api typecheck",
+    "web:dev": "pnpm --filter web dev"
+  }
+}

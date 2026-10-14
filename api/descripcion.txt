@@ -1,0 +1,186 @@
+DESCRIPCIÓN DEL SISTEMA
+=======================
+
+Sistema online para la venta de productos de packaging y descartables.
+Permite a los clientes navegar el catálogo, armar un pedido, aplicar
+descuentos y pagar. Y al administrador gestionar todo el negocio desde
+un panel privado.
+
+¿QUÉ PUEDE HACER UN CLIENTE?
+----------------------------
+
+1. Navegar la web y ver el catálogo de productos organizado por
+   categorías (bandejas, vasos, potes, PVC film, aluminio, papel
+   manteca, bolsas, cubiertos, servilletas, etc.).
+
+2. Buscar productos por nombre o descripción, y filtrar por categoría.
+
+3. Ver el detalle de cada producto:
+   - Fotos
+   - Descripción y medidas
+   - Las distintas formas de comprarlo: por unidad, por paquete, por
+     bulto o por caja
+   - Precio de cada presentación
+   - Si hay stock disponible
+
+4. Agregar productos al carrito y armar el pedido.
+
+5. Ver el total del carrito con los descuentos aplicados automáticamente:
+   - Descuentos por cantidad (ej: 10% al comprar 100 unidades o más)
+   - Descuentos por cupones (ej: el cupón "NAVIDAD" da 15% en ciertos
+     productos y presentaciones específicas)
+
+6. Elegir la forma de envío según el departamento. Algunos
+   departamentos son gratis y otros tienen un costo que se cobra al
+   retirar por DAC (no se cobra online, se paga al recibir el pedido).
+
+7. Pagar con Mercado Pago.
+
+8. Recibir un mail de confirmación con el resumen del pedido (opcional,
+   el administrador decide si se envía o no).
+
+9. Consultar el estado de sus pedidos ingresando su número de teléfono.
+
+No hace falta crear cuenta. Se compra como invitado. Los datos quedan
+solo para el pedido, no se guardan en una base de clientes.
+
+
+¿QUÉ PUEDE HACER EL ADMINISTRADOR?
+----------------------------------
+
+El administrador entra con email y contraseña a un panel privado donde
+puede hacer todo lo siguiente:
+
+1. Gestionar categorías: crear, editar, activar/desactivar, ordenar.
+
+2. Gestionar productos:
+   - Crear y editar productos
+   - Subir y ordenar fotos
+   - Activar o desactivar productos
+   - Definir categoría, descripción y medidas
+
+3. Gestionar las presentaciones de cada producto:
+   - Cada producto puede tener hasta 4 presentaciones: unidad,
+     paquete, bulto y caja
+   - Cada presentación tiene su propio precio y stock
+   - El stock se descuenta automáticamente al venderse
+
+4. Configurar descuentos por cantidad:
+   - Por cada presentación se puede definir "si el cliente compra X
+     cantidad o más, se le aplica Y% de descuento"
+   - Cada producto puede tener varios descuentos distintos, uno por
+     presentación, con cantidades y porcentajes propios
+   - Ejemplo: PVC film 30 cm, si compra 10 unidades o más, 10% off.
+     Si compra 5 paquetes o más, 5% off.
+   - Productos sin descuentos también son válidos, no es obligatorio
+     asignar ninguno
+
+5. Gestionar cupones:
+   - Crear cupones con un código (ej: "NAVIDAD")
+   - Asignar cada cupón a uno o varios productos y presentaciones
+   - Cada asignación tiene su propio porcentaje de descuento
+   - Un mismo cupón puede aplicarse a varios productos del carrito
+     a la vez (ej: el cliente lleva un producto con 10% y otro con
+     15% y ambos usan el mismo cupón "NAVIDAD")
+   - Se pueden limitar usos, poner fechas de vencimiento, activar o
+     desactivar en cualquier momento
+   - Se pueden agregar o quitar productos del cupón sin afectar los
+     pedidos ya realizados
+
+6. Ver los pedidos:
+   - Listado con filtros por estado, búsqueda por número de pedido,
+     nombre del cliente o teléfono
+   - Los pedidos nuevos se marcan como "no vistos" para que no se
+     pase ninguno por alto
+   - Ver detalle completo de cada pedido: cliente, productos,
+     cantidades, dirección, forma de pago, total, historial de cambios
+
+7. Cambiar el estado de cada pedido:
+   Pendiente → Pagado → Preparando → Despachado → Entregado
+   También se puede cancelar en cualquier momento antes de entregar.
+
+8. Marcar pedidos como pagados manualmente:
+   - Cuando el pago es en efectivo, el pedido queda
+     como "Pendiente"
+   - El administrador lo marca como "Pagado" cuando confirma el pago
+   - Al hacerlo, el stock se descuenta de la base de datos
+
+9. Cancelar pedidos:
+   - Si el pago no se concreta, el administrador cancela el pedido
+   - Al cancelar, el stock que estaba reservado vuelve a quedar
+     disponible para otros clientes automáticamente
+
+10. Ver un panel de inicio con:
+    - Cantidad de pedidos por estado
+    - Cantidad de pedidos nuevos sin ver
+    - Ventas del día, del mes y totales
+    - Últimos pedidos recibidos
+    - Productos con stock bajo
+
+11. Configurar el envío de mails:
+    - Activar o desactivar mails al correo del proyecto por cada compra
+    - Activar o desactivar mails de confirmación al cliente
+    - Ambas opciones son independientes: se puede tener una, la otra,
+      las dos o ninguna
+    - Si están desactivadas, el sistema sigue funcionando igual, solo
+      no se envían mails
+    - Se pueden activar más adelante (ahora estan apagados ambos mails)
+
+
+CÓMO FUNCIONA UN PEDIDO POR DENTRO
+----------------------------------
+
+1. El cliente elige productos y arma el carrito.
+
+2. La web calcula automáticamente el total con los descuentos y
+   cupones aplicados.
+
+3. Al confirmar el pedido, el sistema reserva el stock para que otro
+   cliente no compre lo mismo mientras se completa el pago.
+
+4. Si el pago es con Mercado Pago:
+   - El cliente es redirigido a la pasarela de pago
+   - Cuando el pago se aprueba, el pedido pasa a "Pagado" y el stock
+     reservado se descuenta del stock real
+   - Si el pago se rechaza o cancela, el stock reservado se libera
+     automáticamente
+
+5. Si el pago es en efectivo :
+   - El pedido queda como "Pendiente"
+   - El administrador lo marca como "Pagado" cuando confirma el pago
+   - En ese momento el stock reservado se descuenta del stock real
+
+6. Al confirmarse el pago, si el envío de mails está activado, se
+   mandan las notificaciones correspondientes.
+
+7. El administrador ve el pedido en el panel, lo prepara, lo despacha
+   y lo marca como "Entregado" cuando el cliente lo recibe.
+
+
+COSAS IMPORTANTES
+-----------------
+
+- El envío por DAC se cobra al retirar, no se cobra online. En la web
+  se muestra la información pero no afecta el total que se paga por
+  Mercado Pago.
+
+- No hay cuentas de cliente. Se compra como invitado. Si un cliente
+  quiere ver sus pedidos, ingresa su teléfono.
+
+- Todos los descuentos y cupones se calculan del lado del servidor
+  para evitar errores o manipulaciones desde el navegador.
+
+- Los mails son opcionales. Si algo falla al enviarlos, el pedido
+  igual se registra y no se pierde ninguna información.
+
+
+RESUMEN DEL FLUJO
+-----------------
+
+Cliente:
+  Entrar → buscar producto → elegir cantidad → agregar al carrito →
+  aplicar cupones → elegir envío → pagar → recibir confirmación
+
+Administrador:
+  Recibir pedido → verificar pago → preparar → actualizar estado →
+  despachar → stock descontado automáticamente
