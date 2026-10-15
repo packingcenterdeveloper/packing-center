@@ -10,6 +10,7 @@ import {
   type ProductImage,
 } from '../../db/schema/index.js';
 import { quantityDiscounts } from '../../db/schema/index.js';
+import type { Presentation } from '../../db/schema/index.js';
 
 export interface ListFilters {
   onlyActive: boolean;
@@ -21,6 +22,7 @@ export interface ListFilters {
 
 export interface ProductWithImages extends Product {
   images: ProductImage[];
+  presentations: Presentation[];
 }
 
 export interface ListResult {
@@ -68,6 +70,18 @@ export async function findAll(filters: ListFilters): Promise<ListResult> {
       images: {
         limit: 1,
         orderBy: [asc(productImages.sortOrder), asc(productImages.id)],
+      },
+      presentations: {
+        where: eq(presentations.isActive, true),
+        orderBy: sql`
+          CASE ${presentations.type}
+          WHEN 'unidad' THEN 1
+          WHEN 'paquete' THEN 2
+          WHEN 'bulto' THEN 3
+          WHEN 'caja' THEN 4
+          ELSE 5
+        END
+        `,
       },
     },
   });

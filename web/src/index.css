@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  /* Para bottom nav en iPhone con notch */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

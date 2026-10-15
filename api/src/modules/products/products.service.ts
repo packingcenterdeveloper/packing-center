@@ -14,6 +14,7 @@ import type {
   ListProductsQuery,
   UpdateProductBody,
 } from './products.schemas.js';
+import type { Presentation } from '../../db/schema/index.js';
 
 export interface ProductImageEnriched {
   id: number;
@@ -27,6 +28,7 @@ export interface ProductImageEnriched {
 
 export interface ProductListItem extends Product {
   images: ProductImageEnriched[];
+  presentations: Presentation[];
 }
 
 export interface ListProductsResult {
@@ -60,7 +62,7 @@ function enrichImage(image: {
 export async function list(
   query: ListProductsQuery,
   onlyActive: boolean,
-): Promise<ListProductsResult> {
+  ): Promise<ListProductsResult> {
   const { rows, total } = await repo.findAll({
     onlyActive,
     categorySlug: query.category,
@@ -125,7 +127,7 @@ export async function create(input: CreateProductBody): Promise<Product> {
 export async function update(
   id: number,
   input: UpdateProductBody,
-): Promise<Product> {
+  ): Promise<Product> {
   await getById(id);
 
   const patch: Partial<Product> = {};
@@ -161,8 +163,8 @@ export async function remove(id: number): Promise<void> {
   const presentationsCount = await repo.countPresentations(id);
   if (presentationsCount > 0) {
     throw new ConflictError(
-      `Cannot delete product: ${presentationsCount} presentation(s) still assigned to it`,
-    );
+  `Cannot delete product: ${presentationsCount} presentation(s) still assigned to it`,
+  );
   }
 
   await repo.remove(id);
