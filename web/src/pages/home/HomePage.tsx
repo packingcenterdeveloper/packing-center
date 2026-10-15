@@ -1,12 +1,18 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { HiArrowRight } from 'react-icons/hi2';
 import { SearchInput } from '@/components/common/SearchInput';
 import { CategoryCard } from '@/components/category/CategoryCard';
 import { useCategories } from '@/hooks/queries/useCategories';
+import { POPULAR_CATEGORY_SLUG } from '@/lib/constants';
 import { HeroBanner } from './HeroBanner';
 import { FeatureHighlights } from './FeatureHighlights';
-import { Link } from 'react-router-dom';
-import { cn } from '@/lib/cn';
+import { PopularProductsSection } from './PopularProductsSection';
+import { PromoBanner } from './PromoBanner';
+import { WhyChooseUs } from './WhyChooseUs';
+import { SolutionsBanner } from './SolutionsBanner';
+import { TestimonialsSection } from './TestimonialsSection';
+import { SupportCTA } from './SupportCTA';
+import { FaqSection } from './FaqSection';
 
 const CATEGORY_SKELETON_COUNT = 8;
 
@@ -23,10 +29,13 @@ export function HomePage() {
   const navigate = useNavigate();
   const { data: categories, isLoading, isError } = useCategories();
 
-  const visibleCategories = (categories ?? []).slice(0, 8);
+  // Filtramos "populares" del grid general
+  const visibleCategories = (categories ?? [])
+    .filter((c) => c.slug !== POPULAR_CATEGORY_SLUG)
+    .slice(0, 8);
 
   return (
-    <div className="pb-6">
+    <div className="pb-8">
       <div className="px-4 pt-3">
         <SearchInput
           placeholder="Buscar productos..."
@@ -68,6 +77,14 @@ export function HomePage() {
           </div>
         )}
       </section>
+
+      <PopularProductsSection />
+      <PromoBanner />
+      <WhyChooseUs />
+      <SolutionsBanner />
+      <TestimonialsSection />
+      <SupportCTA />
+      <FaqSection />
     </div>
   );
 }

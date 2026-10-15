@@ -21,8 +21,17 @@
 }
 
 @layer utilities {
-  /* Para bottom nav en iPhone con notch */
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

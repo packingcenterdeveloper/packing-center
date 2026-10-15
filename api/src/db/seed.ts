@@ -177,7 +177,6 @@ async function main() {
   // ============================================================
   // 1. CATEGORÍAS
   // ============================================================
-  console.log('[seed] Categorías');
   const catBandejasEspuma = await ensureCategory({
     name: 'Bandejas de espuma',
     slug: 'bandejas-espuma',
@@ -238,7 +237,13 @@ async function main() {
     description: 'Servilletas de papel y sorbetes descartables.',
     sortOrder: 10,
   });
-
+  
+  await ensureCategory({
+  name: 'Populares',
+  slug: 'populares',
+  description: 'Productos destacados que aparecen en la home.',
+  sortOrder: 0,
+});
   // ============================================================
   // 2. BANDEJAS DE ESPUMA
   // ============================================================

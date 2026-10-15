@@ -3,6 +3,10 @@ export const STORAGE_KEYS = {
   ADMIN_AUTH: 'packingcenter.admin.auth',
 } as const;
 
+export const FALLBACK_PRODUCT_IMAGE = 'https://i.postimg.cc/CxrNXwL0/Tubos.jpg';
+
+export const POPULAR_CATEGORY_SLUG = 'populares';
+
 export const ORDER_STATUSES = [
   'pending',
   'paid',
@@ -24,8 +28,8 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 };
 
 export const ORDER_STATUS_COLORS: Record<
-  OrderStatus,
-  { bg: string; text: string }
+OrderStatus,
+{ bg: string; text: string }
 > = {
   pending: { bg: 'bg-amber-100', text: 'text-amber-800' },
   paid: { bg: 'bg-emerald-100', text: 'text-emerald-800' },
