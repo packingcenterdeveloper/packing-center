@@ -202,6 +202,7 @@ export interface QuoteItem {
   couponPercent: number | null;
   couponDiscountCents: number;
   lineTotalCents: number;
+  productImageUrl: string | null;
 }
 
 export interface Quote {

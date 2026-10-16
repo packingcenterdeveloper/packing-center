@@ -33,7 +33,6 @@ export async function checkout(input: CheckoutBody): Promise<CheckoutResult> {
   const quote = await cartService.quote({
     items: input.items,
     coupons: input.coupons,
-    shippingDepartment: input.shippingDepartment,
   });
 
   // 2. Crear pedido
@@ -51,9 +50,9 @@ export async function checkout(input: CheckoutBody): Promise<CheckoutResult> {
     customerAddress: input.customer.address ?? null,
     customerCity: input.customer.city ?? null,
     customerNotes: input.customer.notes ?? null,
-    shippingDepartment: shippingDept,
-    shippingIsFree: quote.shipping.isFree,
-    shippingCostLabel: quote.shipping.label,
+    shippingDepartment: input.shippingDepartment ?? null,
+    shippingIsFree: false,
+    shippingCostLabel: 'Se cobra al retirar por DAC',
     subtotalCents: quote.subtotalCents,
     discountCents: quote.quantityDiscountCents + quote.couponDiscountCents,
     totalCents: quote.totalCents,
