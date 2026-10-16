@@ -14,7 +14,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: '¿Cuáles son los métodos de pago?',
     answer:
-      'Aceptamos Mercado Pago (tarjetas de crédito, débito y dinero en cuenta) y también efectivo o transferencia bancaria coordinada.',
+      'Aceptamos Mercado Pago (tarjetas de crédito, débito y dinero en cuenta).',
   },
   {
     question: '¿Hacen envíos a todo el país?',

@@ -3,6 +3,7 @@ import type { ApiResponse, PaginatedResponse, Product } from './types';
 
 export interface ListProductsParams {
   category?: string;
+  subcategory?: string;
   search?: string;
   includeInactive?: boolean;
   page?: number;
@@ -17,6 +18,7 @@ export async function listProducts(
     {
       params: {
         category: params.category,
+        subcategory: params.subcategory,
         search: params.search,
         includeInactive: params.includeInactive ? 'true' : undefined,
         page: params.page,

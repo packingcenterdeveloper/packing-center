@@ -48,9 +48,11 @@ export function TestimonialsSection() {
         {TESTIMONIALS.map((t) => (
           <article
             key={t.name}
-            className="snap-start shrink-0 w-[80%] max-w-[300px] rounded-xl border border-slate-200 bg-white p-4"
+            className="snap-center shrink-0 w-full sm:w-[calc(50%-6px)] lg:w-[calc(33.333%-8px)] rounded-xl border border-slate-200 bg-white p-4"
           >
-            <p className="text-sm text-slate-700 leading-snug">"{t.quote}"</p>
+            <p className="text-sm text-slate-700 leading-snug">
+              "{t.quote}"
+            </p>
 
             <div className="mt-3 flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center shrink-0">

@@ -1,9 +1,10 @@
-import { desc, eq, inArray } from 'drizzle-orm';
+import { asc, desc, eq, inArray } from 'drizzle-orm';
 import { db } from '../../config/turso.js';
 import {
   couponAssignments,
   coupons,
   presentations,
+  productImages,
   quantityDiscounts,
 } from '../../db/schema/index.js';
 import {
@@ -11,18 +12,20 @@ import {
   ConflictError,
   NotFoundError,
 } from '../../shared/errors/httpErrors.js';
+import { buildThumbUrl } from '../../shared/utils/cloudinaryUrl.js';
 import {
   SHIPPING_COST_LABEL,
   findDepartment,
 } from '../shipping/shipping.data.js';
 import type { PresentationType } from '../../db/schema/index.js';
-import type { QuoteBody, QuoteItemInput } from './cart.schemas.js';
+import type { QuoteBody } from './cart.schemas.js';
 
 export interface QuoteItemResult {
   presentationId: number;
   productId: number;
   productName: string;
   productSlug: string;
+  productImageUrl: string | null;
   presentationType: PresentationType;
   unitPriceCents: number;
   quantity: number;
@@ -83,7 +86,6 @@ function pickQuantityDiscount(
   rules: Array<{ minQuantity: number; percent: number }>,
   quantity: number,
 ): { minQuantity: number; percent: number } | null {
-  // Reglas ya vienen ordenadas por minQuantity descendente.
   const match = rules.find((r) => quantity >= r.minQuantity);
   return match ?? null;
 }
@@ -106,6 +108,13 @@ export async function quote(input: QuoteBody): Promise<QuoteResult> {
     with: {
       product: {
         columns: { id: true, name: true, slug: true, isActive: true },
+        with: {
+          images: {
+            columns: { url: true, publicId: true },
+            limit: 1,
+            orderBy: [asc(productImages.sortOrder), asc(productImages.id)],
+          },
+        },
       },
       quantityDiscounts: {
         where: eq(quantityDiscounts.isActive, true),
@@ -129,7 +138,6 @@ export async function quote(input: QuoteBody): Promise<QuoteResult> {
 
   const presentationById = new Map(presentationRows.map((p) => [p.id, p]));
 
-  // --- Cupones ---
   const warnings: string[] = [];
   const couponRows =
     input.coupons.length > 0
@@ -206,7 +214,6 @@ export async function quote(input: QuoteBody): Promise<QuoteResult> {
     }
   }
 
-  // --- Cálculo por ítem ---
   const resultItems: QuoteItemResult[] = [];
   let subtotalCents = 0;
   let totalQuantityDiscountCents = 0;
@@ -259,11 +266,17 @@ export async function quote(input: QuoteBody): Promise<QuoteResult> {
     totalQuantityDiscountCents += quantityDiscountCents;
     totalCouponDiscountCents += couponDiscountCents;
 
+    const firstImage = presentation.product.images[0];
+    const productImageUrl = firstImage?.publicId
+      ? buildThumbUrl(firstImage.publicId, { width: 200, crop: 'fill' })
+      : (firstImage?.url ?? null);
+
     resultItems.push({
       presentationId: presentation.id,
       productId: presentation.product.id,
       productName: presentation.product.name,
       productSlug: presentation.product.slug,
+      productImageUrl,
       presentationType: presentation.type,
       unitPriceCents,
       quantity: item.quantity,
@@ -280,7 +293,6 @@ export async function quote(input: QuoteBody): Promise<QuoteResult> {
   const totalCents =
     subtotalCents - totalQuantityDiscountCents - totalCouponDiscountCents;
 
-  // --- Envío ---
   let shipping: QuoteResult['shipping'] = {
     department: null,
     departmentName: null,

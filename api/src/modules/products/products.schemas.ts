@@ -10,6 +10,7 @@ export const productIdParamSchema = z.object({
 
 export const listProductsQuerySchema = z.object({
   category: z.string().trim().min(1).max(140).optional(),
+  subcategory: z.string().trim().min(1).max(80).optional(),
   search: z.string().trim().min(1).max(120).optional(),
   includeInactive: z
     .string()
@@ -23,6 +24,7 @@ export const createProductBodySchema = z.object({
   name: z.string().trim().min(1).max(200),
   slug: z.string().trim().min(1).max(140).optional(),
   categoryId: z.coerce.number().int().positive(),
+  subcategory: z.string().trim().max(80).nullable().optional(),
   description: z.string().trim().max(2000).optional(),
   measures: z.string().trim().max(300).optional(),
   isActive: z.boolean().optional(),

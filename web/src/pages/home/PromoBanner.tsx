@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { HiOutlineReceiptPercent, HiChevronRight } from 'react-icons/hi2';
+import { HiOutlineReceiptPercent } from 'react-icons/hi2';
 
 export function PromoBanner() {
   return (
@@ -19,7 +19,6 @@ export function PromoBanner() {
             ¡Cuanto más comprás, más ahorrás!
           </p>
         </div>
-        <HiChevronRight className="w-5 h-5 text-white/70 shrink-0" />
       </Link>
     </section>
   );

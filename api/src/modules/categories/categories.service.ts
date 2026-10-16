@@ -9,6 +9,7 @@ import type {
   CreateCategoryBody,
   UpdateCategoryBody,
 } from './categories.schemas.js';
+import * as productsService from '../products/products.service.js';
 
 export async function list(onlyActive: boolean): Promise<Category[]> {
   return repo.findAll(onlyActive);
@@ -47,7 +48,7 @@ export async function create(input: CreateCategoryBody): Promise<Category> {
 export async function update(
   id: number,
   input: UpdateCategoryBody,
-): Promise<Category> {
+  ): Promise<Category> {
   await getById(id);
 
   const patch: Partial<Category> = {};
@@ -77,8 +78,16 @@ export async function remove(id: number): Promise<void> {
   const productCount = await repo.countProducts(id);
   if (productCount > 0) {
     throw new ConflictError(
-      `Cannot delete category: ${productCount} product(s) still assigned to it`,
-    );
+  `Cannot delete category: ${productCount} product(s) still assigned to it`,
+  );
   }
   await repo.remove(id);
+}
+
+export async function listSubcategories(
+  slug: string,
+  ): Promise<string[]> {
+  // Valida que la categoría exista
+  await getBySlug(slug);
+  return productsService.listSubcategories(slug);
 }

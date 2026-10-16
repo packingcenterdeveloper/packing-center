@@ -59,3 +59,12 @@ export async function deleteCategory(
   await service.remove(id);
   res.status(204).end();
 }
+
+export async function listSubcategories(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { slug } = categorySlugParamSchema.parse(req.params);
+  const data = await service.listSubcategories(slug);
+  res.json({ data });
+}

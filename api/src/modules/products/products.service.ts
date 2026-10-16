@@ -62,10 +62,11 @@ function enrichImage(image: {
 export async function list(
   query: ListProductsQuery,
   onlyActive: boolean,
-  ): Promise<ListProductsResult> {
+): Promise<ListProductsResult> {
   const { rows, total } = await repo.findAll({
     onlyActive,
     categorySlug: query.category,
+    subcategory: query.subcategory,
     search: query.search,
     page: query.page,
     limit: query.limit,
@@ -83,6 +84,12 @@ export async function list(
       totalPages: Math.max(1, Math.ceil(total / query.limit)),
     },
   };
+}
+
+export async function listSubcategories(
+  categorySlug: string,
+): Promise<string[]> {
+  return repo.findDistinctSubcategories(categorySlug);
 }
 
 export async function getBySlug(slug: string, onlyActive: boolean) {
@@ -118,6 +125,7 @@ export async function create(input: CreateProductBody): Promise<Product> {
     name: input.name,
     slug,
     categoryId: input.categoryId,
+    subcategory: input.subcategory ?? null,
     description: input.description,
     measures: input.measures,
     isActive: input.isActive,
@@ -127,7 +135,7 @@ export async function create(input: CreateProductBody): Promise<Product> {
 export async function update(
   id: number,
   input: UpdateProductBody,
-  ): Promise<Product> {
+): Promise<Product> {
   await getById(id);
 
   const patch: Partial<Product> = {};
@@ -135,6 +143,9 @@ export async function update(
   if (input.description !== undefined) patch.description = input.description;
   if (input.measures !== undefined) patch.measures = input.measures;
   if (input.isActive !== undefined) patch.isActive = input.isActive;
+  if (input.subcategory !== undefined) {
+    patch.subcategory = input.subcategory;
+  }
 
   if (input.categoryId !== undefined) {
     const exists = await repo.categoryExists(input.categoryId);
@@ -163,8 +174,8 @@ export async function remove(id: number): Promise<void> {
   const presentationsCount = await repo.countPresentations(id);
   if (presentationsCount > 0) {
     throw new ConflictError(
-  `Cannot delete product: ${presentationsCount} presentation(s) still assigned to it`,
-  );
+      `Cannot delete product: ${presentationsCount} presentation(s) still assigned to it`,
+    );
   }
 
   await repo.remove(id);

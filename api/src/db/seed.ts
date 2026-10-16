@@ -60,6 +60,7 @@ async function ensureProduct(data: {
   categoryId: number;
   name: string;
   slug: string;
+  subcategory?: string;
   description?: string;
   measures?: string;
 }): Promise<ProductRow> {
@@ -253,6 +254,7 @@ async function main() {
     categoryId: catBandejasEspuma.id,
     name: 'Bandeja de espuma N°1',
     slug: 'bandeja-espuma-n1',
+    subcategory: 'espuma',
     description: 'Bandeja de espuma blanca, ideal para porciones pequeñas.',
     measures: 'N°1 · 12 x 9 x 1,5 cm',
   });
@@ -282,6 +284,7 @@ async function main() {
     categoryId: catBandejasEspuma.id,
     name: 'Bandeja de espuma N°4',
     slug: 'bandeja-espuma-n4',
+    subcategory: 'espuma',
     description: 'Bandeja de espuma para carnes, fiambres y comidas.',
     measures: 'N°4 · 20 x 14 x 2 cm',
   });
@@ -311,6 +314,7 @@ async function main() {
     categoryId: catBandejasEspuma.id,
     name: 'Bandeja de espuma N°8',
     slug: 'bandeja-espuma-n8',
+    subcategory: 'espuma',
     description: 'Bandeja grande de espuma, para asados y porciones grandes.',
     measures: 'N°8 · 27 x 20 x 3 cm',
   });
@@ -345,6 +349,7 @@ async function main() {
     categoryId: catBandejasPlastico.id,
     name: 'Bandeja plástica rectangular',
     slug: 'bandeja-plastica-rectangular',
+    subcategory: 'espuma',
     description: 'Bandeja plástica resistente, apta para microondas.',
     measures: '25 x 18 x 4 cm',
   });
@@ -379,6 +384,7 @@ async function main() {
     categoryId: catVasos.id,
     name: 'Vaso plástico 200 ml',
     slug: 'vaso-plastico-200-ml',
+    subcategory: 'espuma',
     description: 'Vaso descartable transparente, apto para bebidas frías.',
     measures: '200 ml · 7 cm alto · 7 cm diámetro',
   });
@@ -408,6 +414,7 @@ async function main() {
     categoryId: catVasos.id,
     name: 'Vaso plástico 300 ml',
     slug: 'vaso-plastico-300-ml',
+    subcategory: 'espuma',
     description: 'Vaso descartable transparente mediano.',
     measures: '300 ml · 9 cm alto · 8 cm diámetro',
   });
@@ -437,6 +444,7 @@ async function main() {
     categoryId: catVasos.id,
     name: 'Vaso plástico 500 ml',
     slug: 'vaso-plastico-500-ml',
+    subcategory: 'espuma',
     description: 'Vaso descartable grande, ideal para cerveza o refrescos.',
     measures: '500 ml · 12 cm alto · 9 cm diámetro',
   });
@@ -471,6 +479,7 @@ async function main() {
     categoryId: catPotes.id,
     name: 'Pote 250 ml con tapa',
     slug: 'pote-250-ml-con-tapa',
+    subcategory: 'espuma',
     description: 'Pote descartable con tapa, apto para alimentos fríos y calientes.',
     measures: '250 ml · 8 cm alto · 7 cm diámetro',
   });
@@ -500,6 +509,7 @@ async function main() {
     categoryId: catPotes.id,
     name: 'Pote 500 ml con tapa',
     slug: 'pote-500-ml-con-tapa',
+    subcategory: 'espuma',
     description: 'Pote descartable con tapa para sopas y comidas.',
     measures: '500 ml · 10 cm alto · 9 cm diámetro',
   });
@@ -529,6 +539,7 @@ async function main() {
     categoryId: catPotes.id,
     name: 'Pote 1 litro con tapa',
     slug: 'pote-1l-con-tapa',
+    subcategory: 'espuma',
     description: 'Pote grande con tapa, ideal para ensaladas y comidas familiares.',
     measures: '1 L · 14 cm alto · 12 cm diámetro',
   });
@@ -563,6 +574,7 @@ async function main() {
     categoryId: catPvcFilm.id,
     name: 'PVC film 30 cm x 30 m',
     slug: 'pvc-film-30cm-30m',
+    subcategory: 'espuma',
     description: 'Rollo de PVC film transparente para conservar alimentos.',
     measures: '30 cm ancho · 30 m largo',
   });
@@ -592,6 +604,7 @@ async function main() {
     categoryId: catPvcFilm.id,
     name: 'PVC film 45 cm x 30 m',
     slug: 'pvc-film-45cm-30m',
+    subcategory: 'espuma',
     description: 'Rollo de PVC film ancho para gastronomía.',
     measures: '45 cm ancho · 30 m largo',
   });
@@ -619,6 +632,7 @@ async function main() {
     categoryId: catAluminio.id,
     name: 'Papel aluminio 30 cm x 7,5 m',
     slug: 'papel-aluminio-30cm-7-5m',
+    subcategory: 'espuma',
     description: 'Rollo de aluminio para conservación de alimentos.',
     measures: '30 cm ancho · 7,5 m largo',
   });
@@ -646,6 +660,7 @@ async function main() {
     categoryId: catPapelManteca.id,
     name: 'Papel manteca 30 cm x 30 m',
     slug: 'papel-manteca-30cm-30m',
+    subcategory: 'espuma',
     description: 'Rollo de papel manteca para cocina y repostería.',
     measures: '30 cm ancho · 30 m largo',
   });
@@ -673,6 +688,7 @@ async function main() {
     categoryId: catBolsas.id,
     name: 'Bolsa camiseta 30 x 40 cm',
     slug: 'bolsa-camiseta-30x40',
+    subcategory: 'espuma',
     description: 'Bolsa camiseta de polietileno, alta resistencia.',
     measures: '30 x 40 cm',
   });
@@ -702,6 +718,7 @@ async function main() {
     categoryId: catBolsas.id,
     name: 'Bolsa de residuos 60 x 80 cm',
     slug: 'bolsa-residuos-60x80',
+    subcategory: 'espuma',
     description: 'Bolsa de residuos reforzada, color negro.',
     measures: '60 x 80 cm',
   });
@@ -729,6 +746,7 @@ async function main() {
     categoryId: catCubiertos.id,
     name: 'Cubiertos descartables (set tenedor, cuchillo, cuchara)',
     slug: 'cubiertos-descartables-set',
+    subcategory: 'espuma',
     description: 'Set de cubiertos descartables de plástico, uso profesional.',
     measures: 'Set x 3 piezas',
   });
@@ -756,6 +774,7 @@ async function main() {
     categoryId: catServilletas.id,
     name: 'Servilletas de papel 24 x 24 cm',
     slug: 'servilletas-papel-24x24',
+    subcategory: 'espuma',
     description: 'Servilletas de papel tissue, doble hoja.',
     measures: '24 x 24 cm · doble hoja',
   });
@@ -785,6 +804,7 @@ async function main() {
     categoryId: catServilletas.id,
     name: 'Sorbetes descartables',
     slug: 'sorbetes-descartables',
+    subcategory: 'espuma',
     description: 'Sorbetes de plástico, color surtido.',
     measures: '20 cm largo',
   });

@@ -108,7 +108,7 @@ export interface Product {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  // Opcionales: solo vienen en respuestas enriquecidas
+  subcategory: string | null;
   images?: ProductImage[];
   presentations?: Presentation[];
   category?: Pick<Category, 'id' | 'name' | 'slug'>;

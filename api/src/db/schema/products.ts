@@ -23,6 +23,7 @@ export const products = sqliteTable(
     slug: text('slug').notNull().unique(),
     description: text('description'),
     measures: text('measures'),
+    subcategory: text('subcategory'),
     isActive: integer('is_active', { mode: 'boolean' })
       .notNull()
       .default(true),
@@ -36,6 +37,7 @@ export const products = sqliteTable(
   },
   (table) => ({
     categoryIdx: index('products_category_id_idx').on(table.categoryId),
+    subcategoryIdx: index('products_subcategory_idx').on(table.subcategory),
     nameIdx: index('products_name_idx').on(table.name),
   }),
 );

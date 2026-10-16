@@ -16,3 +16,10 @@ export async function getCategoryBySlug(slug: string): Promise<Category> {
   );
   return data.data;
 }
+
+export async function listSubcategories(slug: string): Promise<string[]> {
+  const { data } = await api.get<ApiResponse<string[]>>(
+    `/api/v1/categories/${slug}/subcategories`,
+  );
+  return data.data;
+}

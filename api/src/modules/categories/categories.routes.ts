@@ -7,6 +7,7 @@ export const categoriesRouter: Router = Router();
 
 // --- Públicas ---
 categoriesRouter.get('/', optionalAdmin, asyncHandler(controller.listCategories));
+categoriesRouter.get('/:slug/subcategories', asyncHandler(controller.listSubcategories), );
 categoriesRouter.get('/:slug', asyncHandler(controller.getCategoryBySlug));
 
 // --- Admin ---
