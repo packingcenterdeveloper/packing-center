@@ -14,7 +14,8 @@
     "db:seed": "tsx src/db/seed.ts",
     "hash:password": "tsx src/scripts/hashPassword.ts",
     "auth:test": "tsx src/scripts/testAuth.ts",
-    "e2e": "tsx src/scripts/e2e.ts"
+    "e2e": "tsx src/scripts/e2e.ts",
+    "check:admin": "tsx src/scripts/checkAdminCredentials.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

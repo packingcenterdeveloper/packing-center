@@ -65,3 +65,12 @@ export async function deleteProduct(
   await service.remove(id);
   res.status(204).end();
 }
+
+export async function adminGetProduct(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { id } = productIdParamSchema.parse(req.params);
+  const data = await service.getByIdAdmin(id);
+  res.json({ data });
+}

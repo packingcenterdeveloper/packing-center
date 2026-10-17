@@ -109,6 +109,15 @@ export async function getById(id: number): Promise<Product> {
   return found;
 }
 
+export async function getByIdAdmin(id: number) {
+  const found = await repo.findByIdWithRelations(id);
+  if (!found) throw new NotFoundError(`Product ${id} not found`);
+  return {
+    ...found,
+    images: found.images.map(enrichImage),
+  };
+}
+
 export async function create(input: CreateProductBody): Promise<Product> {
   const slug = slugify(input.slug ?? input.name);
   if (!slug) throw new ConflictError('Could not generate a valid slug');

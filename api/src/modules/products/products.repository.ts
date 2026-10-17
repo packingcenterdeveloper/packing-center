@@ -210,3 +210,31 @@ export async function countPresentations(productId: number): Promise<number> {
     .where(eq(presentations.productId, productId));
   return Number(row?.count ?? 0);
 }
+
+export async function findByIdWithRelations(id: number) {
+  return db.query.products.findFirst({
+    where: eq(products.id, id),
+    with: {
+      images: {
+        orderBy: [asc(productImages.sortOrder), asc(productImages.id)],
+      },
+      presentations: {
+        orderBy: sql`
+          CASE ${presentations.type}
+            WHEN 'unidad' THEN 1
+            WHEN 'paquete' THEN 2
+            WHEN 'bulto' THEN 3
+            WHEN 'caja' THEN 4
+            ELSE 5
+          END
+        `,
+        with: {
+          quantityDiscounts: {
+            orderBy: [asc(quantityDiscounts.minQuantity)],
+          },
+        },
+      },
+      category: true,
+    },
+  });
+}

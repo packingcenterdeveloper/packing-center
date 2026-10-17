@@ -17,6 +17,7 @@ import { settingsRouter } from '../modules/settings/settings.routes.js';
 import { shippingRouter } from '../modules/shipping/shipping.routes.js';
 import { uploadsRouter } from '../modules/uploads/uploads.routes.js';
 import { adminRouter } from '../modules/admin/admin.routes.js';
+import { adminProductsRouter } from '../modules/products/products.admin.routes.js';
 
 export const router: Router = Router();
 
@@ -39,6 +40,7 @@ router.use('/coupons', couponsRouter);
 router.use('/shipping', shippingRouter);
 router.use('/orders', ordersRouter);
 router.use('/admin/orders', adminOrdersRouter);
+router.use('/admin/products', adminProductsRouter);
 router.use('/admin', adminRouter);
 router.use('/payments', paymentsRouter);
 router.use('/emails', emailsRouter);
