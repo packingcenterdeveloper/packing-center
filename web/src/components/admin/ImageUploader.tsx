@@ -6,7 +6,7 @@ import {
   HiXMark,
 } from 'react-icons/hi2';
 import { toast } from 'react-hot-toast';
-import { getUploadConfig, uploadToCloudinary } from '@/api/admin/uploads';
+import { compressImage, getUploadConfig, uploadToCloudinary } from '@/api/admin/uploads';
 import { useCreateImage, useDeleteImage } from '@/hooks/mutations/useProductImageMutations';
 import { ProductImage } from '@/components/common/ProductImage';
 import { cn } from '@/lib/cn';
@@ -31,43 +31,54 @@ export function ImageUploader({ productId, images }: ImageUploaderProps) {
   const deleteImage = useDeleteImage(productId);
 
   const handleFiles = async (files: FileList | null) => {
-    if (!files || files.length === 0) return;
+  if (!files || files.length === 0) return;
 
-    setUploading(true);
-    try {
-      const config = await getUploadConfig();
+  setUploading(true);
+  const errors: string[] = [];
 
-      for (const file of Array.from(files)) {
-        if (!ACCEPTED.includes(file.type)) {
-          toast.error(`${file.name}: formato no soportado`);
-          continue;
-        }
-        if (file.size > MAX_BYTES) {
-          toast.error(`${file.name}: supera los 5 MB`);
-          continue;
-        }
+  try {
+    const config = await getUploadConfig();
 
-        const uploaded = await uploadToCloudinary(file, config);
+    for (const file of Array.from(files)) {
+      if (!ACCEPTED.includes(file.type)) {
+        errors.push(`${file.name}: formato no soportado`);
+        continue;
+      }
+      if (file.size > MAX_BYTES) {
+        errors.push(`${file.name}: supera los 5 MB`);
+        continue;
+      }
+
+      try {
+        const compressed = await compressImage(file);
+        const uploaded = await uploadToCloudinary(compressed, config);
         await createImage.mutateAsync({
           url: uploaded.secureUrl,
           publicId: uploaded.publicId,
         });
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'error desconocido';
+        errors.push(`${file.name}: ${msg}`);
       }
-
-      toast.success(
-        files.length === 1
-          ? 'Imagen agregada'
-          : `${files.length} imágenes agregadas`,
-      );
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Error al subir la imagen';
-      toast.error(message);
-    } finally {
-      setUploading(false);
-      if (inputRef.current) inputRef.current.value = '';
     }
-  };
+
+    const uploadedCount = files.length - errors.length;
+
+    if (uploadedCount > 0) {
+      toast.success(
+        uploadedCount === 1
+          ? 'Imagen agregada'
+          : `${uploadedCount} imágenes agregadas`,
+      );
+    }
+    for (const e of errors) {
+      toast.error(e);
+    }
+  } finally {
+    setUploading(false);
+    if (inputRef.current) inputRef.current.value = '';
+  }
+};
 
   const handleDelete = async () => {
     if (!confirmDelete) return;

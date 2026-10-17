@@ -15,29 +15,25 @@ import type { Category } from '@/api/types';
 
 const formSchema = z.object({
   name: z
-    .string()
-    .trim()
-    .min(2, 'Mínimo 2 caracteres')
-    .max(120, 'Máximo 120 caracteres'),
+  .string()
+  .trim()
+  .min(2, 'Mínimo 2 caracteres')
+  .max(120, 'Máximo 120 caracteres'),
   description: z
-    .string()
-    .trim()
-    .max(500, 'Máximo 500 caracteres')
-    .optional()
-    .or(z.literal('')),
-  sortOrder: z.coerce
-    .number()
-    .int()
-    .min(0, 'Tiene que ser 0 o más')
-    .max(9999)
-    .default(0),
-  isActive: z.boolean().default(true),
+  .string()
+  .trim()
+  .max(500, 'Máximo 500 caracteres')
+  .optional()
+  .or(z.literal('')),
+  sortOrder: z.coerce.number().int().min(0, 'Tiene que ser 0 o más').max(9999),
+  isActive: z.boolean(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.input<typeof formSchema>;
+type FormOutput = z.output<typeof formSchema>;
 
 const inputBase =
-  'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
+'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
 
 interface CategoryFormDialogProps {
   open: boolean;
@@ -60,7 +56,7 @@ export function CategoryFormDialog({
     reset,
     watch,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<FormValues, unknown, FormOutput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -95,7 +91,7 @@ export function CategoryFormDialog({
 
   const submitting = createMutation.isPending || updateMutation.isPending;
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormOutput) => {
     const payload = {
       name: values.name.trim(),
       description: values.description?.trim() || undefined,
@@ -117,7 +113,7 @@ export function CategoryFormDialog({
       onClose();
     } catch (err) {
       const message =
-        err instanceof ApiError ? err.message : 'No se pudo guardar';
+      err instanceof ApiError ? err.message : 'No se pudo guardar';
       toast.error(message);
     }
   };
@@ -144,15 +140,15 @@ export function CategoryFormDialog({
             className={cn(
               'flex-1 h-11 rounded-lg text-sm font-semibold text-white transition-colors',
               submitting
-                ? 'bg-slate-300 cursor-not-allowed'
-                : 'bg-brand active:bg-brand-700',
-            )}
+              ? 'bg-slate-300 cursor-not-allowed'
+              : 'bg-brand active:bg-brand-700',
+              )}
           >
             {submitting
-              ? 'Guardando...'
-              : isEditing
-                ? 'Guardar cambios'
-                : 'Crear categoría'}
+            ? 'Guardando...'
+            : isEditing
+            ? 'Guardar cambios'
+            : 'Crear categoría'}
           </button>
         </div>
       }
@@ -177,19 +173,19 @@ export function CategoryFormDialog({
             className={cn(
               inputBase,
               errors.name ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
             placeholder="Ej: Bandejas de espuma"
           />
           {errors.name && (
             <p className="mt-1 text-xs text-rose-600">
               {errors.name.message}
             </p>
-          )}
+            )}
           {suggestedSlug && (
             <p className="mt-1.5 text-[11px] text-slate-400">
               URL: <span className="font-mono">/categorias/{suggestedSlug}</span>
             </p>
-          )}
+            )}
         </div>
 
         <div>
@@ -206,14 +202,14 @@ export function CategoryFormDialog({
             className={cn(
               'w-full px-3 py-2 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent resize-none',
               errors.description ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
             placeholder="Contá brevemente qué productos incluye esta categoría"
           />
           {errors.description && (
             <p className="mt-1 text-xs text-rose-600">
               {errors.description.message}
             </p>
-          )}
+            )}
         </div>
 
         <div>
@@ -231,7 +227,7 @@ export function CategoryFormDialog({
             className={cn(
               inputBase,
               errors.sortOrder ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
           />
           <p className="mt-1 text-[11px] text-slate-400">
             Números más bajos aparecen primero. Ej: 1 va antes que 2.
@@ -240,7 +236,7 @@ export function CategoryFormDialog({
             <p className="mt-1 text-xs text-rose-600">
               {errors.sortOrder.message}
             </p>
-          )}
+            )}
         </div>
 
         <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -255,5 +251,5 @@ export function CategoryFormDialog({
         </label>
       </form>
     </Modal>
-  );
+    );
 }

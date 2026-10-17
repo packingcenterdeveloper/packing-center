@@ -22,39 +22,40 @@ import { cn } from '@/lib/cn';
 
 const formSchema = z.object({
   name: z
-    .string()
-    .trim()
-    .min(2, 'Mínimo 2 caracteres')
-    .max(200, 'Máximo 200 caracteres'),
+  .string()
+  .trim()
+  .min(2, 'Mínimo 2 caracteres')
+  .max(200, 'Máximo 200 caracteres'),
   categoryId: z.coerce
-    .number({ message: 'Elegí una categoría' })
-    .int()
-    .positive('Elegí una categoría'),
+  .number({ message: 'Elegí una categoría' })
+  .int()
+  .positive('Elegí una categoría'),
   subcategory: z
-    .string()
-    .trim()
-    .max(80, 'Máximo 80 caracteres')
-    .optional()
-    .or(z.literal('')),
+  .string()
+  .trim()
+  .max(80, 'Máximo 80 caracteres')
+  .optional()
+  .or(z.literal('')),
   description: z
-    .string()
-    .trim()
-    .max(2000, 'Máximo 2000 caracteres')
-    .optional()
-    .or(z.literal('')),
+  .string()
+  .trim()
+  .max(2000, 'Máximo 2000 caracteres')
+  .optional()
+  .or(z.literal('')),
   measures: z
-    .string()
-    .trim()
-    .max(300, 'Máximo 300 caracteres')
-    .optional()
-    .or(z.literal('')),
-  isActive: z.boolean().default(true),
+  .string()
+  .trim()
+  .max(300, 'Máximo 300 caracteres')
+  .optional()
+  .or(z.literal('')),
+  isActive: z.boolean(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.input<typeof formSchema>;
+type FormOutput = z.output<typeof formSchema>;
 
 const inputBase =
-  'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
+'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
 
 export function ProductFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -74,7 +75,7 @@ export function ProductFormPage() {
     reset,
     watch,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<FormValues, unknown, FormOutput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -104,7 +105,7 @@ export function ProductFormPage() {
 
   const submitting = createMutation.isPending || updateMutation.isPending;
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormOutput) => {
     const payload = {
       name: values.name.trim(),
       categoryId: values.categoryId,
@@ -125,7 +126,7 @@ export function ProductFormPage() {
       }
     } catch (err) {
       const message =
-        err instanceof ApiError ? err.message : 'No se pudo guardar';
+      err instanceof ApiError ? err.message : 'No se pudo guardar';
       toast.error(message);
     }
   };
@@ -136,7 +137,7 @@ export function ProductFormPage() {
         <div className="h-8 rounded bg-slate-100 animate-pulse w-1/3" />
         <div className="h-72 rounded-xl bg-slate-100 animate-pulse" />
       </div>
-    );
+      );
   }
 
   if (isEditing && (productQuery.isError || !productQuery.data)) {
@@ -152,7 +153,7 @@ export function ProductFormPage() {
           Volver a productos
         </Link>
       </div>
-    );
+      );
   }
 
   const categories = categoriesQuery.data ?? [];
@@ -200,26 +201,26 @@ export function ProductFormPage() {
               className={cn(
                 inputBase,
                 errors.name ? 'border-rose-300' : 'border-slate-200',
-              )}
+                )}
               placeholder="Ej: Bandeja de espuma N°4"
             />
             {errors.name && (
               <p className="mt-1 text-xs text-rose-600">
                 {errors.name.message}
               </p>
-            )}
+              )}
             {isEditing && product && (
               <p className="mt-1.5 text-[11px] text-slate-400">
                 URL:{' '}
                 <span className="font-mono">/productos/{product.slug}</span>
               </p>
-            )}
+              )}
             {!isEditing && suggestedSlug && (
               <p className="mt-1.5 text-[11px] text-slate-400">
                 URL:{' '}
                 <span className="font-mono">/productos/{suggestedSlug}</span>
               </p>
-            )}
+              )}
           </div>
 
           <div>
@@ -236,7 +237,7 @@ export function ProductFormPage() {
                 inputBase,
                 'pr-8',
                 errors.categoryId ? 'border-rose-300' : 'border-slate-200',
-              )}
+                )}
             >
               <option value={0}>Elegir categoría</option>
               {categories.map((c) => (
@@ -244,13 +245,13 @@ export function ProductFormPage() {
                   {c.name}
                   {!c.isActive ? ' (oculta)' : ''}
                 </option>
-              ))}
+                ))}
             </select>
             {errors.categoryId && (
               <p className="mt-1 text-xs text-rose-600">
                 {errors.categoryId.message}
               </p>
-            )}
+              )}
           </div>
 
           <div>
@@ -268,7 +269,7 @@ export function ProductFormPage() {
               className={cn(
                 inputBase,
                 errors.subcategory ? 'border-rose-300' : 'border-slate-200',
-              )}
+                )}
               placeholder="Ej: espuma, plástica, metal"
             />
             <p className="mt-1 text-[11px] text-slate-400">
@@ -278,7 +279,7 @@ export function ProductFormPage() {
               <p className="mt-1 text-xs text-rose-600">
                 {errors.subcategory.message}
               </p>
-            )}
+              )}
           </div>
 
           <div>
@@ -296,14 +297,14 @@ export function ProductFormPage() {
               className={cn(
                 'w-full px-3 py-2 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent resize-none',
                 errors.description ? 'border-rose-300' : 'border-slate-200',
-              )}
+                )}
               placeholder="Contá qué es el producto, para qué se usa, etc."
             />
             {errors.description && (
               <p className="mt-1 text-xs text-rose-600">
                 {errors.description.message}
               </p>
-            )}
+              )}
           </div>
 
           <div>
@@ -320,14 +321,14 @@ export function ProductFormPage() {
               className={cn(
                 inputBase,
                 errors.measures ? 'border-rose-300' : 'border-slate-200',
-              )}
+                )}
               placeholder="Ej: 20 x 14 x 2 cm"
             />
             {errors.measures && (
               <p className="mt-1 text-xs text-rose-600">
                 {errors.measures.message}
               </p>
-            )}
+              )}
           </div>
 
           <label className="flex items-center gap-3 cursor-pointer select-none pt-2 border-t border-slate-100">
@@ -355,7 +356,7 @@ export function ProductFormPage() {
               presentaciones y descuentos por cantidad.
             </p>
           </div>
-        )}
+          )}
 
         <div className="sticky bottom-0 bg-slate-50 pt-3 pb-3 -mx-4 px-4 border-t border-slate-200 lg:static lg:border-0 lg:p-0 lg:bg-transparent lg:mx-0">
           <div className="flex gap-2">
@@ -373,15 +374,15 @@ export function ProductFormPage() {
               className={cn(
                 'flex-1 h-11 rounded-lg text-sm font-semibold text-white transition-colors',
                 submitting
-                  ? 'bg-slate-300 cursor-not-allowed'
-                  : 'bg-brand active:bg-brand-700',
-              )}
+                ? 'bg-slate-300 cursor-not-allowed'
+                : 'bg-brand active:bg-brand-700',
+                )}
             >
               {submitting
-                ? 'Guardando...'
-                : isEditing
-                  ? 'Guardar cambios'
-                  : 'Crear producto'}
+              ? 'Guardando...'
+              : isEditing
+              ? 'Guardar cambios'
+              : 'Crear producto'}
             </button>
           </div>
         </div>
@@ -390,13 +391,13 @@ export function ProductFormPage() {
       {/* Secciones extra solo en modo edición */}
       {isEditing && product && productId && (
         <>
-          <ImageUploader productId={productId} images={product.images ?? []} />
-          <PresentationsSection
-            productId={productId}
-            presentations={product.presentations ?? []}
-          />
+        <ImageUploader productId={productId} images={product.images ?? []} />
+        <PresentationsSection
+          productId={productId}
+          presentations={product.presentations ?? []}
+        />
         </>
-      )}
+        )}
     </div>
-  );
+    );
 }

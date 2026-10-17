@@ -13,23 +13,16 @@ import { cn } from '@/lib/cn';
 import type { QuantityDiscount } from '@/api/types';
 
 const formSchema = z.object({
-  minQuantity: z.coerce
-    .number()
-    .int()
-    .min(1, 'Mínimo 1')
-    .max(100000),
-  percent: z.coerce
-    .number()
-    .int()
-    .min(1, 'Mínimo 1%')
-    .max(100, 'Máximo 100%'),
-  isActive: z.boolean().default(true),
+  minQuantity: z.coerce.number().int().min(1, 'Mínimo 1').max(100000),
+  percent: z.coerce.number().int().min(1, 'Mínimo 1%').max(100, 'Máximo 100%'),
+  isActive: z.boolean(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.input<typeof formSchema>;
+type FormOutput = z.output<typeof formSchema>;
 
 const inputBase =
-  'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
+'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
 
 interface DiscountFormDialogProps {
   open: boolean;
@@ -55,7 +48,7 @@ export function DiscountFormDialog({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<FormValues, unknown, FormOutput>({
     resolver: zodResolver(formSchema),
     defaultValues: { minQuantity: 1, percent: 5, isActive: true },
   });
@@ -75,7 +68,7 @@ export function DiscountFormDialog({
 
   const submitting = createMutation.isPending || updateMutation.isPending;
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormOutput) => {
     try {
       if (isEditing && discount) {
         await updateMutation.mutateAsync({
@@ -99,7 +92,7 @@ export function DiscountFormDialog({
       onClose();
     } catch (err) {
       const message =
-        err instanceof ApiError ? err.message : 'No se pudo guardar';
+      err instanceof ApiError ? err.message : 'No se pudo guardar';
       toast.error(message);
     }
   };
@@ -126,9 +119,9 @@ export function DiscountFormDialog({
             className={cn(
               'flex-1 h-11 rounded-lg text-sm font-semibold text-white',
               submitting
-                ? 'bg-slate-300 cursor-not-allowed'
-                : 'bg-brand active:bg-brand-700',
-            )}
+              ? 'bg-slate-300 cursor-not-allowed'
+              : 'bg-brand active:bg-brand-700',
+              )}
           >
             {submitting ? 'Guardando...' : 'Guardar'}
           </button>
@@ -160,7 +153,7 @@ export function DiscountFormDialog({
             className={cn(
               inputBase,
               errors.minQuantity ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
           />
           <p className="mt-1 text-[11px] text-slate-400">
             A partir de esta cantidad, se aplica el descuento.
@@ -169,7 +162,7 @@ export function DiscountFormDialog({
             <p className="mt-1 text-xs text-rose-600">
               {errors.minQuantity.message}
             </p>
-          )}
+            )}
         </div>
 
         <div>
@@ -188,13 +181,13 @@ export function DiscountFormDialog({
             className={cn(
               inputBase,
               errors.percent ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
           />
           {errors.percent && (
             <p className="mt-1 text-xs text-rose-600">
               {errors.percent.message}
             </p>
-          )}
+            )}
         </div>
 
         <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -207,5 +200,5 @@ export function DiscountFormDialog({
         </label>
       </form>
     </Modal>
-  );
+    );
 }
