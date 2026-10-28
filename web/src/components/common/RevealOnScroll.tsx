@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn';
 interface RevealOnScrollProps {
   children: ReactNode;
   className?: string;
-  delay?: number; // en ms, para escalonar
+  delay?: number;
 }
 
 export function RevealOnScroll({
@@ -20,13 +20,16 @@ export function RevealOnScroll({
     if (!el) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+
         if (entry.isIntersecting) {
           setTimeout(() => setIsVisible(true), delay);
-          observer.unobserve(el); // solo animar una vez
+          observer.unobserve(el);
         }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' },
     );
 
     observer.observe(el);
@@ -38,10 +41,8 @@ export function RevealOnScroll({
       ref={ref}
       className={cn(
         'transition-all duration-700 ease-out',
-        isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 translate-y-10',
-        className
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10',
+        className,
       )}
     >
       {children}

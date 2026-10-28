@@ -30,7 +30,7 @@ const TESTIMONIALS: Testimonial[] = [
   {
     name: 'Lucía Fernández',
     business: 'Catering Lucía',
-    rating: 4,
+    rating: 5,
     quote:
       'Muy buena variedad de productos y la atención es excelente. Los recomiendo para eventos.',
     initials: 'LF',
@@ -40,8 +40,6 @@ const TESTIMONIALS: Testimonial[] = [
 export function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-
-  // Índices de las posiciones de navegación realmente disponibles.
   const [dotIndexes, setDotIndexes] = useState<number[]>([]);
 
   useEffect(() => {
@@ -49,62 +47,55 @@ export function TestimonialsSection() {
     if (!container) return;
 
     const updateNavigation = () => {
-      const cards = Array.from(
-        container.children
-      ) as HTMLElement[];
-
+      const cards = Array.from(container.children) as HTMLElement[];
       if (cards.length === 0) return;
+
+      const firstCard = cards[0];
+      if (!firstCard) return;
 
       const maxScroll = Math.max(
         0,
-        container.scrollWidth - container.clientWidth
+        container.scrollWidth - container.clientWidth,
       );
 
-      // Si todas las tarjetas entran en pantalla, no hacen falta dots.
       if (maxScroll <= 1) {
         setDotIndexes([]);
         setActiveIndex(0);
         return;
       }
 
-      const firstCardLeft =
-        cards[0].getBoundingClientRect().left;
-
+      const firstCardLeft = firstCard.getBoundingClientRect().left;
       const stops: { index: number; left: number }[] = [];
 
       cards.forEach((card, index) => {
         const cardLeft = card.getBoundingClientRect().left;
-
-        // Distancia de desplazamiento necesaria para llegar a esta tarjeta.
         const targetLeft = Math.min(
           maxScroll,
-          Math.max(0, cardLeft - firstCardLeft)
+          Math.max(0, cardLeft - firstCardLeft),
         );
 
-        // Evitamos crear dots que llevan exactamente a la misma posición.
         const alreadyExists = stops.some(
-          (stop) => Math.abs(stop.left - targetLeft) < 2
+          (stop) => Math.abs(stop.left - targetLeft) < 2,
         );
 
         if (!alreadyExists) {
-          stops.push({
-            index,
-            left: targetLeft,
-          });
+          stops.push({ index, left: targetLeft });
         }
       });
 
       setDotIndexes(stops.map((stop) => stop.index));
 
-      // Conservamos el dot correspondiente a la posición actual.
-      let nearestIndex = stops[0]?.index ?? 0;
+      const firstStop = stops[0];
+      if (!firstStop) {
+        setActiveIndex(0);
+        return;
+      }
+
+      let nearestIndex = firstStop.index;
       let nearestDistance = Infinity;
 
       stops.forEach((stop) => {
-        const distance = Math.abs(
-          container.scrollLeft - stop.left
-        );
-
+        const distance = Math.abs(container.scrollLeft - stop.left);
         if (distance < nearestDistance) {
           nearestDistance = distance;
           nearestIndex = stop.index;
@@ -115,7 +106,6 @@ export function TestimonialsSection() {
     };
 
     const observer = new ResizeObserver(updateNavigation);
-
     observer.observe(container);
 
     Array.from(container.children).forEach((card) => {
@@ -129,27 +119,26 @@ export function TestimonialsSection() {
     };
   }, []);
 
-  // Detecta la posición activa mientras el carrusel se desplaza.
   const handleScroll = () => {
     const container = scrollRef.current;
-
     if (!container || dotIndexes.length === 0) return;
 
-    const cards = Array.from(
-      container.children
-    ) as HTMLElement[];
-
+    const cards = Array.from(container.children) as HTMLElement[];
     if (cards.length === 0) return;
+
+    const firstCard = cards[0];
+    if (!firstCard) return;
 
     const maxScroll = Math.max(
       0,
-      container.scrollWidth - container.clientWidth
+      container.scrollWidth - container.clientWidth,
     );
 
-    const firstCardLeft =
-      cards[0].getBoundingClientRect().left;
+    const firstCardLeft = firstCard.getBoundingClientRect().left;
+    const firstDotIndex = dotIndexes[0];
+    if (firstDotIndex === undefined) return;
 
-    let nearestIndex = dotIndexes[0];
+    let nearestIndex = firstDotIndex;
     let nearestDistance = Infinity;
 
     dotIndexes.forEach((index) => {
@@ -158,16 +147,10 @@ export function TestimonialsSection() {
 
       const targetLeft = Math.min(
         maxScroll,
-        Math.max(
-          0,
-          card.getBoundingClientRect().left - firstCardLeft
-        )
+        Math.max(0, card.getBoundingClientRect().left - firstCardLeft),
       );
 
-      const distance = Math.abs(
-        container.scrollLeft - targetLeft
-      );
-
+      const distance = Math.abs(container.scrollLeft - targetLeft);
       if (distance < nearestDistance) {
         nearestDistance = distance;
         nearestIndex = index;
@@ -175,19 +158,15 @@ export function TestimonialsSection() {
     });
 
     setActiveIndex((current) =>
-      current === nearestIndex ? current : nearestIndex
+      current === nearestIndex ? current : nearestIndex,
     );
   };
 
-  // Navega a la posición elegida mediante los dots.
   const scrollTo = (index: number) => {
     const container = scrollRef.current;
     if (!container) return;
 
-    const cards = Array.from(
-      container.children
-    ) as HTMLElement[];
-
+    const cards = Array.from(container.children) as HTMLElement[];
     const firstCard = cards[0];
     const targetCard = cards[index];
 
@@ -222,7 +201,7 @@ export function TestimonialsSection() {
             className={cn(
               'snap-start shrink-0 rounded-xl border border-slate-200 bg-white p-5',
               'w-full sm:w-[calc(50%-6px)]',
-              '2xl:w-[calc(33.333%-8px)]'
+              '2xl:w-[calc(33.333%-8px)]',
             )}
           >
             <p className="text-sm leading-snug text-slate-700">
@@ -263,7 +242,6 @@ export function TestimonialsSection() {
         ))}
       </div>
 
-      {/* Los dots solo aparecen si existen posiciones de navegación. */}
       {dotIndexes.length > 0 && (
         <div className="mt-4 flex justify-center gap-2">
           {dotIndexes.map((index) => (
@@ -277,7 +255,7 @@ export function TestimonialsSection() {
                 'h-2 rounded-full transition-all duration-300',
                 activeIndex === index
                   ? 'w-6 bg-brand'
-                  : 'w-2 bg-slate-300 hover:bg-slate-400'
+                  : 'w-2 bg-slate-300 hover:bg-slate-400',
               )}
             />
           ))}
