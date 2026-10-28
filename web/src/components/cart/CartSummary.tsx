@@ -60,7 +60,7 @@ export function CartSummary({ quote, shippingSelector }: CartSummaryProps) {
 
       <Link
         to="/checkout"
-        className="mt-1 inline-flex items-center justify-center w-full h-11 rounded-lg bg-brand text-white text-sm font-semibold active:bg-brand-700"
+        className="transition-all duration-200 hover:bg-brand-700 mt-1 inline-flex items-center justify-center w-full h-11 rounded-lg bg-brand text-white text-sm font-semibold active:bg-brand-700"
       >
         Continuar compra
       </Link>

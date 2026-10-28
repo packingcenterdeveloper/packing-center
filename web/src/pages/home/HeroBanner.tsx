@@ -23,7 +23,7 @@ export function HeroBanner() {
         </p>
         <Link
           to="/categorias"
-          className="mt-5 inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-brand text-white text-sm font-semibold active:scale-95 transition-transform"
+          className="mt-5 inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-brand text-white text-sm font-semibold active:scale-95 transition-transform transition-all duration-200 hover:scale-105 hover:bg-brand-700 active:scale-95"
         >
           Explorar catálogo
           <HiArrowRight className="w-4 h-4" />

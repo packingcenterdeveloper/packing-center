@@ -216,7 +216,7 @@ export function ProductPage() {
       </section>
 
       {/* CTA fijo abajo */}
-      <div className="fixed bottom-16 inset-x-0 z-30 bg-white border-t border-slate-200 px-4 py-4">
+      <div className="fixed md:bottom-0 bottom-16 inset-x-0 z-30 bg-white border-t border-slate-200 px-4 py-4">
         <div className="flex items-center gap-3 max-w-5xl mx-auto">
           <QuantityInput
             value={quantity}
@@ -228,7 +228,7 @@ export function ProductPage() {
             disabled={isOutOfStock}
             onClick={handleAdd}
             className={cn(
-              'flex-1 h-11 rounded-lg font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors',
+              'transition-all duration-200 hover:bg-brand-700 flex-1 h-11 rounded-lg font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors',
               isOutOfStock
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                 : 'bg-brand text-white active:bg-brand-700',

@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
-import { HiOutlineReceiptPercent } from 'react-icons/hi2';
+import { HiOutlineReceiptPercent, HiChevronRight } from 'react-icons/hi2';
 
 export function PromoBanner() {
   return (
-    <section className="mt-8 px-4">
+    <section className="mt-8 px-4 md:hidden">
       <Link
         to="/categorias"
         className="flex items-center gap-3 rounded-xl bg-brand text-white px-4 py-4 active:bg-brand-700 transition-colors"
       >
-        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+        <div className="transition-all duration-200 hover:scale-105 hover:bg-brand-700 active:scale-95 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
           <HiOutlineReceiptPercent className="w-5 h-5" />
         </div>
         <div className="flex-1 min-w-0">
@@ -19,6 +19,7 @@ export function PromoBanner() {
             ¡Cuanto más comprás, más ahorrás!
           </p>
         </div>
+        <HiChevronRight className="w-5 h-5 text-white/70 shrink-0" />
       </Link>
     </section>
   );

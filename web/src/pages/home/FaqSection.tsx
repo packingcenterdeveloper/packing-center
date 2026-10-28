@@ -30,7 +30,7 @@ const FAQ_ITEMS: FaqItem[] = [
 
 export function FaqSection() {
   return (
-    <section className="mt-8 px-4">
+    <section className="mt-8 md:px-0 px-4">
       <h2 className="text-base font-bold text-slate-900 mb-3">
         Preguntas frecuentes
       </h2>

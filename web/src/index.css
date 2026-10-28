@@ -20,6 +20,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @layer utilities {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
@@ -38,4 +42,62 @@
 
 .mi-clase-especial{
   margin-top:0!important;
+}
+
+@media (max-width: 850px) {
+  .textodelheaderPC{
+    font-size: 0.65rem;
+  }
+  .WhyChooseUsGridContainerMB{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .FeatureHighlightsContainerPC{
+    padding: 0 1rem;
+  }
+
+}
+
+
+@media (max-width: 425px) {
+  .FeatureHighlightsContainerPC{
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .WhyChooseUsGridContainerMB{
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .WhyChooseUsGridContainerP1{
+    font-size: 1rem;
+    text-transform: capitalize;
+    letter-spacing: 1px;
+  }
+  .WhyChooseUsGridContainerP2{
+    font-size: .75rem;
+  }
+  .WhyChooseUsGridContainerIcon{
+    width: 3rem;
+    height: 3rem
+  }
+  .WhyChooseUsGridIcon{
+    width: 1.75rem;
+    height: 1.75rem
+  }
+
+
+  .FeatureHighlightsIcon{
+    width: 2rem;
+    height: 2rem
+  }
+  .FeatureHighlightsP1{
+    font-size: 1rem;
+    text-transform: capitalize;
+    letter-spacing: 1px;
+  }
+  .FeatureHighlightsP2{
+    font-size: .75rem;
+  }
 }

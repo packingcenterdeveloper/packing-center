@@ -73,7 +73,7 @@ export function CouponInput({ appliedCoupons }: CouponInputProps) {
           type="submit"
           disabled={loading || !code.trim()}
           className={cn(
-            'h-10 px-4 rounded-lg text-sm font-semibold transition-colors',
+            'transition-all duration-200 hover:scale-105 hover:text-white hover:bg-brand-700 active:scale-95 h-10 px-4 rounded-lg text-sm font-semibold transition-colors',
             loading || !code.trim()
               ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
               : 'bg-brand text-white active:bg-brand-700',

@@ -14,7 +14,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
       to={`/categorias/${category.slug}`}
       className="flex flex-col items-center gap-2 group"
     >
-      <div className="w-full aspect-square rounded-xl bg-brand-50 flex items-center justify-center overflow-hidden transition-transform group-active:scale-95">
+      <div className="cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:shadow-md w-full aspect-square rounded-xl bg-brand-50 flex items-center justify-center overflow-hidden transition-transform group-active:scale-95">
         {category.imageUrl ? (
           <img
             src={category.imageUrl}

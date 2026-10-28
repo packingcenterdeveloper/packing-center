@@ -23,14 +23,14 @@ export function MyOrdersPage() {
 
   return (
     <div className="pb-8">
-      <div className="px-4 pt-5">
+      <div className="md:px-0 px-4 pt-5">
         <h1 className="text-lg font-bold text-slate-900">Mis pedidos</h1>
         <p className="text-sm text-slate-500 mt-1">
           Ingresá tu teléfono para ver tus pedidos.
         </p>
       </div>
 
-      <div className="px-4 mt-5">
+      <div className="md:px-0 px-4 mt-5">
         <form onSubmit={handleSubmit} className="relative">
           <input
             type="tel"
@@ -56,7 +56,7 @@ export function MyOrdersPage() {
         </form>
       </div>
 
-      <div className="px-4 mt-5">
+      <div className="md:px-0 px-4 mt-5">
         {submittedPhone === null ? (
           <div className="py-12 text-center">
             <div className="w-14 h-14 rounded-full bg-brand-50 mx-auto flex items-center justify-center mb-3">
