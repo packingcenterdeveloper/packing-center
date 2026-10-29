@@ -6,7 +6,7 @@ import { checkDbConnection } from './config/turso.js';
 async function main() {
   try {
     await checkDbConnection();
-    logger.info('Turso connection OK');
+    logger.info('Turso connection OKEY');
   } catch (err) {
     logger.error({ err }, 'Turso connection failed');
     process.exit(1);
