@@ -15,7 +15,8 @@
     "hash:password": "tsx src/scripts/hashPassword.ts",
     "auth:test": "tsx src/scripts/testAuth.ts",
     "e2e": "tsx src/scripts/e2e.ts",
-    "check:admin": "tsx src/scripts/checkAdminCredentials.ts"
+    "check:admin": "tsx src/scripts/checkAdminCredentials.ts",
+    "test:api": "playwright test"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
@@ -36,6 +37,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/bcryptjs": "^3.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",

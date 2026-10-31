@@ -203,6 +203,42 @@ Tablas:
   (`pending`/`sent`/`failed`/`skipped`), `sentAt`
 - `settings` — key/value simple, con upsert atómico
 
+## Relaciones de Base de Datos y Reglas de Integridad
+
+Para evitar errores en producción, es fundamental entender cómo se relacionan las tablas y qué ocurre cuando se intenta borrar un registro. El schema de Drizzle define las siguientes reglas de Foreign Key (`onDelete`):
+
+### 1. Jerarquía del Catálogo
+- **`categories` → `products` (Relación 1 a N)**: 
+  - Regla: `onDelete: 'restrict'`. **No se puede borrar una categoría si tiene productos asignados.** Si se intenta, la base de datos lanzará un error. Primero hay que mover o borrar los productos.
+- **`products` → `presentations` (1 a N)**: 
+  - Regla: `onDelete: 'cascade'`. Si se borra un producto, **se borran automáticamente todas sus presentaciones**.
+- **`products` → `product_images` (1 a N)**: 
+  - Regla: `onDelete: 'cascade'`. Al borrar un producto, sus imágenes se eliminan de la base de datos (y el backend se encarga de borrarlas de Cloudinary).
+- **`presentations` → `quantity_discounts` (1 a N)**: 
+  - Regla: `onDelete: 'cascade'`. Al borrar una presentación, sus reglas de descuento por cantidad desaparecen.
+
+### 2. Cupones y Asignaciones
+- **`coupons` → `coupon_assignments` (1 a N)**: 
+  - Regla: `onDelete: 'cascade'`. Si se borra el cupón, se borran todas sus asignaciones (a qué productos aplica).
+- **`coupon_assignments` → `products` y `presentations`**: 
+  - Regla: `onDelete: 'cascade'`. Si se borra un producto o una presentación, la asignación de cupón también desaparece para evitar datos huérfanos.
+
+### 3. El Núcleo de Pedidos (Inmutabilidad Histórica)
+- **`orders` → `order_items` (1 a N)**: 
+  - Regla: `onDelete: 'cascade'`. Si se borra un pedido, sus ítems se borran.
+- **`order_items` → `products` y `presentations`**: 
+  - Regla: `onDelete: 'set null'`. **¡CRÍTICO!** Los ítems del pedido guardan una "foto" (snapshot) del nombre, precio y presentación en el momento de la compra. Si un producto se borra del catálogo, el pedido histórico **NO se rompe**; simplemente el `productId` queda en `null`, pero el nombre y precio guardados en `order_items` se mantienen intactos para la contabilidad.
+- **`orders` → `payments`, `order_status_history`, `inventory_movements`, `email_events` (1 a N)**: 
+  - Regla: `onDelete: 'cascade'` para pagos e historial, y `set null` para movimientos de inventario y mails (para mantener la auditoría incluso si el pedido se borra).
+
+### 4. Inventario y Stock
+- **`presentations` → `inventory_movements` (1 a N)**:
+  - Regla: `onDelete: 'cascade'`. Cada vez que se reserva, vende o libera stock, se crea un registro en `inventory_movements`. Si se borra la presentación, su historial de movimientos se borra.
+  - **Fórmula de Stock**: El stock real disponible para la venta **nunca** es solo la columna `stock`. Siempre es `stock - stockReserved`. El campo `stockReserved` se incrementa cuando un pedido entra en estado `pending` y se libera (o se descuenta del `stock` real) cuando el pedido pasa a `paid` o `cancelled`.
+
+### 5. Configuración
+- **`settings`**: Es una tabla aislada de tipo Key/Value. No tiene relaciones con otras tablas. Los flags de mail (`MAIL_ADMIN_ENABLED`, `MAIL_CLIENT_ENABLED`) viven acá para poder cambiarlos en runtime sin reiniciar el servidor.
+
 ## Rutas principales
 
 Públicas:

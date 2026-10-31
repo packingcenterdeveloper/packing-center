@@ -22,6 +22,7 @@ export const createCouponBodySchema = z.object({
     .trim()
     .min(1)
     .max(60)
+    .regex(/^[A-Z0-9_-]+$/)
     .transform((v) => v.toUpperCase()),
   description: z.string().trim().max(500).optional(),
   maxUses: z.coerce.number().int().positive().nullable().optional(),
