@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-const TEST_ADMIN_EMAIL = 'packingcenterdeveloper@gmail.com';
-const TEST_ADMIN_PASSWORD = 'p4ckingCenterDeVel0p3r';
+const TEST_ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const TEST_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 let adminToken: string;
 let testCategoryId: number;
