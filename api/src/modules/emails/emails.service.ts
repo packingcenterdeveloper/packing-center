@@ -45,6 +45,7 @@ async function sendOne(
 
   const transporter = getTransporter();
   if (!transporter) {
+    console.error(`[DEBUG] No hay transporter para ${toEmail}. Se marca como failed.`);
     await repo.update(eventId, {
       status: 'failed',
       error: 'No transporter configured (missing MAIL_USER/MAIL_PASS)',
@@ -53,6 +54,7 @@ async function sendOne(
   }
 
   try {
+    console.log(`[DEBUG] Enviando mail a ${toEmail} con asunto: ${rendered.subject}`);
     await transporter.sendMail({
       from: `"${env.MAIL_FROM_NAME}" <${env.MAIL_USER}>`,
       to: toEmail,
@@ -60,11 +62,13 @@ async function sendOne(
       html: rendered.html,
       text: rendered.text,
     });
+    console.log(`[DEBUG] Mail enviado a ${toEmail} exitosamente.`);
     await repo.update(eventId, {
       status: 'sent',
       sentAt: new Date(),
     });
   } catch (err) {
+    console.error(`[DEBUG] Error al enviar mail a ${toEmail}:`, err);
     logger.error({ err, toEmail }, 'Failed to send email');
     await repo.update(eventId, {
       status: 'failed',
@@ -80,8 +84,12 @@ export async function sendOrderEmails(ctx: SendContext): Promise<void> {
     settingsService.getMailRecipient(),
   ]);
 
+  console.log(`[DEBUG] Flags - Admin: ${adminEnabled}, Cliente: ${clientEnabled}, Destino: ${adminTo}`);
+
+
   // Mail al correo del proyecto
   if (adminEnabled) {
+    console.log(`[DEBUG] Enviando mail a admin (${adminTo})...`);
     if (!adminTo) {
       logger.warn(
         { orderId: ctx.order.id },
@@ -93,6 +101,7 @@ export async function sendOrderEmails(ctx: SendContext): Promise<void> {
     }
   } else {
     // Registramos el evento como skipped para auditoría
+    console.log('[DEBUG] Mail a admin está desactivado (flag false)');
     if (adminTo) {
       const rendered = renderOrderAdminEmail(ctx.order, ctx.items);
       await sendOne('order_admin', adminTo, rendered, ctx.order.id, false);
