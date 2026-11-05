@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
+import { Resend } from 'resend';
 import { env } from '../../config/env.js';
 import { logger } from '../../config/logger.js';
-import { getTransporter } from '../../config/mailer.js';
+import { getMailer } from '../../config/mailer.js';
 import type { Order, OrderItem } from '../../db/schema/index.js';
 import * as ordersRepo from '../orders/orders.repository.js';
 import * as settingsService from '../settings/settings.service.js';
@@ -23,7 +24,8 @@ async function sendOne(
   rendered: RenderedEmail,
   orderId: string,
   enabled: boolean,
-): Promise<void> {
+  fromEmail: string,
+  ): Promise<void> {
   const eventId = randomUUID();
 
   await repo.create({
@@ -39,36 +41,38 @@ async function sendOne(
     logger.debug(
       { toEmail, subject: rendered.subject, orderId, type },
       'Email skipped: flag disabled',
-    );
+      );
     return;
   }
 
-  const transporter = getTransporter();
-  if (!transporter) {
-    console.error(`[DEBUG] No hay transporter para ${toEmail}. Se marca como failed.`);
-    await repo.update(eventId, {
-      status: 'failed',
-      error: 'No transporter configured (missing MAIL_USER/MAIL_PASS)',
-    });
-    return;
-  }
+  const resend = getMailer();
 
   try {
-    console.log(`[DEBUG] Enviando mail a ${toEmail} con asunto: ${rendered.subject}`);
-    await transporter.sendMail({
-      from: `"${env.MAIL_FROM_NAME}" <${env.MAIL_USER}>`,
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
       to: toEmail,
       subject: rendered.subject,
       html: rendered.html,
       text: rendered.text,
     });
-    console.log(`[DEBUG] Mail enviado a ${toEmail} exitosamente.`);
+
+    if (error) {
+      // Si Resend devuelve un error controlado (ej: email inválido)
+      logger.error({ error, toEmail }, 'Resend returned an error');
+      await repo.update(eventId, {
+        status: 'failed',
+        error: error.message,
+      });
+      return;
+    }
+
+    // Si todo salió bien
     await repo.update(eventId, {
       status: 'sent',
       sentAt: new Date(),
     });
+
   } catch (err) {
-    console.error(`[DEBUG] Error al enviar mail a ${toEmail}:`, err);
     logger.error({ err, toEmail }, 'Failed to send email');
     await repo.update(eventId, {
       status: 'failed',
@@ -84,49 +88,19 @@ export async function sendOrderEmails(ctx: SendContext): Promise<void> {
     settingsService.getMailRecipient(),
   ]);
 
-  console.log(`[DEBUG] Flags - Admin: ${adminEnabled}, Cliente: ${clientEnabled}, Destino: ${adminTo}`);
+  const resend = getMailer();
+  const fromEmail = `${env.MAIL_FROM_NAME} <pedidos@packingcenteruy.com>`;
 
-
-  // Mail al correo del proyecto
-  if (adminEnabled) {
-    console.log(`[DEBUG] Enviando mail a admin (${adminTo})...`);
-    if (!adminTo) {
-      logger.warn(
-        { orderId: ctx.order.id },
-        'MAIL_ADMIN_ENABLED=true but MAIL_TO is empty, admin email skipped',
-      );
-    } else {
-      const rendered = renderOrderAdminEmail(ctx.order, ctx.items);
-      await sendOne('order_admin', adminTo, rendered, ctx.order.id, true);
-    }
-  } else {
-    // Registramos el evento como skipped para auditoría
-    console.log('[DEBUG] Mail a admin está desactivado (flag false)');
-    if (adminTo) {
-      const rendered = renderOrderAdminEmail(ctx.order, ctx.items);
-      await sendOne('order_admin', adminTo, rendered, ctx.order.id, false);
-    }
+  // 1. Mail al ADMIN (siempre que el flag esté activo y haya destinatario)
+  if (adminEnabled && adminTo) {
+    const rendered = renderOrderAdminEmail(ctx.order, ctx.items);
+    await sendOne('order_admin', adminTo, rendered, ctx.order.id, true, fromEmail);
   }
 
-  // Mail al cliente
+  // 2. Mail al CLIENTE (solo si el flag está activo y el cliente dio su email)
   if (clientEnabled && ctx.order.customerEmail) {
     const rendered = renderOrderClientEmail(ctx.order, ctx.items);
-    await sendOne(
-      'order_client',
-      ctx.order.customerEmail,
-      rendered,
-      ctx.order.id,
-      true,
-    );
-  } else if (ctx.order.customerEmail) {
-    const rendered = renderOrderClientEmail(ctx.order, ctx.items);
-    await sendOne(
-      'order_client',
-      ctx.order.customerEmail,
-      rendered,
-      ctx.order.id,
-      false,
-    );
+    await sendOne('order_client', ctx.order.customerEmail, rendered, ctx.order.id, true, fromEmail);
   }
 }
 
@@ -143,7 +117,7 @@ export interface ResendResult {
 
 export async function resendPendingForOrder(
   orderId: string,
-): Promise<ResendResult> {
+  ): Promise<ResendResult> {
   const order = await ordersRepo.findById(orderId);
   if (!order) return { sent: 0, failed: 0, skipped: 0, total: 0 };
 
@@ -164,7 +138,7 @@ export async function resendPendingForOrder(
 
     // Chequeo del flag correspondiente al tipo de mail
     const flagEnabled =
-      event.type === 'order_admin' ? adminEnabled : clientEnabled;
+    event.type === 'order_admin' ? adminEnabled : clientEnabled;
 
     if (!flagEnabled) {
       skipped++;
@@ -172,9 +146,9 @@ export async function resendPendingForOrder(
     }
 
     const rendered =
-      event.type === 'order_admin'
-        ? renderOrderAdminEmail(order, items)
-        : renderOrderClientEmail(order, items);
+    event.type === 'order_admin'
+    ? renderOrderAdminEmail(order, items)
+    : renderOrderClientEmail(order, items);
 
     const transporter = getTransporter();
     if (!transporter) {
