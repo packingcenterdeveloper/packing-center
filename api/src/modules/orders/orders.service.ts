@@ -247,12 +247,11 @@ export async function updateStatus(
 
     // Enviar mails al confirmar pago o cancelar.
   if (input.status === 'paid' || input.status === 'cancelled') {
-    console.log(`[DEBUG] Intentando enviar mails para pedido ${id}. Estado: ${input.status}`);
     const items = await repo.findItems(id);
-    emailsService
+    
+    await emailsService
     .sendOrderEmails({ order: updated!, items })
     .catch((err) => {
-        // No rompemos el flujo si fallan los mails.
       console.error('[orders] Error sending emails', err);
     });
   }

@@ -125,6 +125,9 @@ export async function processWebhook(
   if (!dataId) {
     return { handled: false, reason: 'No data.id in notification' };
   }
+  if (input.body.type && input.body.type !== 'payment') {
+    return { handled: true, reason: `Ignored type: ${input.body.type}` };
+  }
 
   const signature = verifyMpSignature({
     signatureHeader: input.signatureHeader,
