@@ -61,7 +61,6 @@ html {
 
 }
 
-
 @media (max-width: 425px) {
   .FeatureHighlightsContainerPC{
     grid-template-columns: repeat(1, minmax(0, 1fr));
