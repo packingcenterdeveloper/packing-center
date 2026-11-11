@@ -56,10 +56,10 @@ export async function getMailRecipient(): Promise<string> {
   return getString('MAIL_TO');
 }
 
-function ensureSmtpCredentials(): void {
-  if (!env.MAIL_USER || !env.MAIL_PASS) {
+function ensureResendCredentials(): void {
+  if (!env.RESEND_API_KEY) {
     throw new UnprocessableEntityError(
-      'No se puede activar ningún envío de mails: MAIL_USER y MAIL_PASS deben estar configurados en .env',
+      'No se puede activar el envío de mails: RESEND_API_KEY no está configurada en el servidor.',
     );
   }
 }
@@ -78,7 +78,7 @@ export async function update(
     input.MAIL_CLIENT_ENABLED === true;
 
   if (wantsToEnableAnyMail) {
-    ensureSmtpCredentials();
+    ensureResendCredentials();
   }
 
   // Si el admin activa el correo a su casilla, necesita un MAIL_TO válido

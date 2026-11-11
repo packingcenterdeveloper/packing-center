@@ -61,10 +61,10 @@ export function MobileHeader() {
           <img
             src="https://i.postimg.cc/FRN1V3Xr/image.png"
             alt="Packing Center"
-            className="h-10 w-auto object-contain"
+            className="h-9 w-auto object-contain"
           />
           <div className="flex flex-col items-center shrink-0">
-            <span className="text-xl font-extrabold tracking-tight text-brand leading-none">
+            <span className="text-l font-extrabold tracking-tight text-brand leading-none">
               PACKING
             </span>
             <span className="text-[10px] font-bold tracking-[0.25em] text-slate-500 mt-1">

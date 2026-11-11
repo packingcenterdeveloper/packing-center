@@ -117,7 +117,7 @@ export interface ResendResult {
 
 export async function resendPendingForOrder(
   orderId: string,
-  ): Promise<ResendResult> {
+): Promise<ResendResult> {
   const order = await ordersRepo.findById(orderId);
   if (!order) return { sent: 0, failed: 0, skipped: 0, total: 0 };
 
@@ -129,6 +129,9 @@ export async function resendPendingForOrder(
     settingsService.isMailClientEnabled(),
   ]);
 
+  const resend = getMailer();
+  const fromEmail = `${env.MAIL_FROM_NAME} <pedidos@packingcenteruy.com>`;
+
   let sent = 0;
   let failed = 0;
   let skipped = 0;
@@ -136,9 +139,8 @@ export async function resendPendingForOrder(
   for (const event of events) {
     if (event.status === 'sent') continue;
 
-    // Chequeo del flag correspondiente al tipo de mail
     const flagEnabled =
-    event.type === 'order_admin' ? adminEnabled : clientEnabled;
+      event.type === 'order_admin' ? adminEnabled : clientEnabled;
 
     if (!flagEnabled) {
       skipped++;
@@ -146,30 +148,33 @@ export async function resendPendingForOrder(
     }
 
     const rendered =
-    event.type === 'order_admin'
-    ? renderOrderAdminEmail(order, items)
-    : renderOrderClientEmail(order, items);
-
-    const transporter = getTransporter();
-    if (!transporter) {
-      failed++;
-      continue;
-    }
+      event.type === 'order_admin'
+        ? renderOrderAdminEmail(order, items)
+        : renderOrderClientEmail(order, items);
 
     try {
-      await transporter.sendMail({
-        from: `"${env.MAIL_FROM_NAME}" <${env.MAIL_USER}>`,
+      const { error } = await resend.emails.send({
+        from: fromEmail,
         to: event.toEmail,
         subject: rendered.subject,
         html: rendered.html,
         text: rendered.text,
       });
-      await repo.update(event.id, {
-        status: 'sent',
-        sentAt: new Date(),
-        error: null,
-      });
-      sent++;
+
+      if (error) {
+        await repo.update(event.id, {
+          status: 'failed',
+          error: error.message,
+        });
+        failed++;
+      } else {
+        await repo.update(event.id, {
+          status: 'sent',
+          sentAt: new Date(),
+          error: null,
+        });
+        sent++;
+      }
     } catch (err) {
       await repo.update(event.id, {
         status: 'failed',

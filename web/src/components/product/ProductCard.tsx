@@ -3,7 +3,7 @@ import { HiOutlineShoppingCart } from 'react-icons/hi2';
 import { Price } from '@/components/common/Price';
 import { ProductImage } from '@/components/common/ProductImage';
 import { useAddToCart } from '@/hooks/useAddToCart';
-import { PRESENTATION_TYPE_LABELS } from '@/lib/constants';
+import { getPresentationLabel } from '@/lib/presentation';
 import { cn } from '@/lib/cn';
 import type { Presentation, Product } from '@/api/types';
 
@@ -76,7 +76,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
         {presentation && (
           <p className="text-xs text-slate-500">
-            {PRESENTATION_TYPE_LABELS[presentation.type] ?? presentation.type}
+            {getPresentationLabel(presentation)}
           </p>
         )}
 

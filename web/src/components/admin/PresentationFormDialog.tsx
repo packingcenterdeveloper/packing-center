@@ -33,6 +33,7 @@ const formSchema = z.object({
   pricePesos: z.coerce.number().min(0.01, 'El precio debe ser mayor a 0'),
   stock: z.coerce.number().int().min(0, 'El stock no puede ser negativo'),
   isActive: z.boolean(),
+  unitCount: z.coerce.number().int().min(1).nullable().optional(),
 });
 
 type FormValues = z.input<typeof formSchema>;
@@ -73,6 +74,7 @@ export function PresentationFormDialog({
       pricePesos: 0,
       stock: 0,
       isActive: true,
+      unitCount: null
     },
   });
 
@@ -86,6 +88,7 @@ export function PresentationFormDialog({
         pricePesos: Math.round(presentation.priceCents / 100),
         stock: presentation.stock,
         isActive: presentation.isActive,
+        unitCount: presentation.unitCount ?? null,
       });
     } else {
       const availableType =
@@ -115,6 +118,7 @@ export function PresentationFormDialog({
             priceCents,
             stock: values.stock,
             isActive: values.isActive,
+            unitCount: values.unitCount ?? null,
           },
         });
         toast.success('Presentación actualizada');
@@ -125,6 +129,7 @@ export function PresentationFormDialog({
           priceCents,
           stock: values.stock,
           isActive: values.isActive,
+          unitCount: values.unitCount ?? null,
         });
         toast.success('Presentación agregada');
       }
@@ -237,6 +242,24 @@ export function PresentationFormDialog({
               {errors.pricePesos.message}
             </p>
             )}
+        </div>
+
+        <div>
+          <label htmlFor="pres-unit-count" className="block text-xs font-medium text-slate-600 mb-1.5">
+            Unidades por presentación <span className="text-slate-400">(opcional)</span>
+          </label>
+          <input
+            id="pres-unit-count"
+            type="number"
+            min={1}
+            step={1}
+            {...register('unitCount')}
+            className={cn(inputBase, 'border-slate-200')}
+            placeholder="Ej: 6 (para paquete x 6)"
+          />
+          <p className="mt-1 text-[11px] text-slate-400">
+            Si esta presentación trae varias unidades adentro, indicalo acá. Se mostrará como "Paquete x 6". Dejalo vacío si no aplica.
+          </p>
         </div>
 
         <div>

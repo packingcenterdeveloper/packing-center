@@ -24,6 +24,7 @@ export const createPresentationBodySchema = z.object({
   priceCents: z.coerce.number().int().min(0),
   stock: z.coerce.number().int().min(0).default(0),
   isActive: z.boolean().optional(),
+  unitCount: z.coerce.number().int().min(1).nullable().optional(),
 });
 
 export const updatePresentationBodySchema = z.object({
@@ -31,6 +32,7 @@ export const updatePresentationBodySchema = z.object({
   priceCents: z.coerce.number().int().min(0).optional(),
   stock: z.coerce.number().int().min(0).optional(),
   isActive: z.boolean().optional(),
+  unitCount: z.coerce.number().int().min(1).nullable().optional(),
 });
 
 export type CreatePresentationBody = z.infer<typeof createPresentationBodySchema>;

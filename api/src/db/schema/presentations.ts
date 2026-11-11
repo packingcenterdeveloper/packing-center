@@ -33,6 +33,7 @@ export const presentations = sqliteTable(
     sku: text('sku'),
     priceCents: integer('price_cents').notNull(),
     stock: integer('stock').notNull().default(0),
+    unitCount: integer('unit_count'),
     stockReserved: integer('stock_reserved').notNull().default(0),
     isActive: integer('is_active', { mode: 'boolean' })
       .notNull()

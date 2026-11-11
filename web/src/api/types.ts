@@ -95,6 +95,7 @@ export interface Presentation {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  unitCount: number | null;
   quantityDiscounts?: QuantityDiscount[];
 }
 

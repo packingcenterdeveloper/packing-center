@@ -16,8 +16,7 @@
     "auth:test": "tsx src/scripts/testAuth.ts",
     "e2e": "tsx src/scripts/e2e.ts",
     "check:admin": "tsx src/scripts/checkAdminCredentials.ts",
-    "test:api": "playwright test",
-    "test:email": "tsx src/scripts/testEmail.ts"
+    "test:api": "playwright test"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

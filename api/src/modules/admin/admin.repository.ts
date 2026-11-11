@@ -82,7 +82,7 @@ export interface LowStockItem {
   productId: number;
   productName: string;
   productSlug: string;
-  type: 'unidad' | 'paquete' | 'bulto' | 'caja';
+  type: 'unidad' | 'kg' | 'paquete' | 'bulto' | 'caja';
   stock: number;
   stockReserved: number;
   available: number;

@@ -14,7 +14,7 @@ import { useProduct } from '@/hooks/queries/useProduct';
 import { useAddToCart } from '@/hooks/useAddToCart';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
 import { cn } from '@/lib/cn';
-import { PRESENTATION_TYPE_LABELS } from '@/lib/constants';
+import { getPresentationLabel } from '@/lib/presentation';
 import type { Presentation } from '@/api/types';
 
 const PRESENTATION_ORDER: Presentation['type'][] = [
@@ -126,7 +126,7 @@ export function ProductPage() {
         {selected && (
           <>
             <p className="text-sm text-slate-500 mt-1">
-              {PRESENTATION_TYPE_LABELS[selected.type] ?? selected.type}
+              {getPresentationLabel(selected)}
             </p>
             <div className="mt-2 flex items-baseline gap-2">
               <Price cents={selected.priceCents} size="lg" />

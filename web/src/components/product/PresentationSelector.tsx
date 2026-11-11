@@ -1,6 +1,6 @@
 import { cn } from '@/lib/cn';
 import { formatCents } from '@/lib/format';
-import { PRESENTATION_TYPE_LABELS } from '@/lib/constants';
+import { getPresentationLabel } from '@/lib/presentation';
 import type { Presentation } from '@/api/types';
 
 interface PresentationSelectorProps {
@@ -52,7 +52,7 @@ export function PresentationSelector({
 
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-slate-900">
-                {PRESENTATION_TYPE_LABELS[p.type] ?? p.type}
+                {getPresentationLabel(p)}
               </p>
             </div>
 

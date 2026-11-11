@@ -7,6 +7,7 @@ export interface CreatePresentationInput {
   priceCents: number;
   stock: number;
   isActive?: boolean;
+  unitCount?: number | null;
 }
 
 export interface UpdatePresentationInput {
@@ -14,6 +15,7 @@ export interface UpdatePresentationInput {
   priceCents?: number;
   stock?: number;
   isActive?: boolean;
+  unitCount?: number | null;
 }
 
 export async function adminCreatePresentation(

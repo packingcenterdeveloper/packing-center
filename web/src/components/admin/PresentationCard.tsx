@@ -10,7 +10,7 @@ import { DiscountFormDialog } from './DiscountFormDialog';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useDeleteDiscount } from '@/hooks/mutations/useDiscountMutations';
 import { formatCents } from '@/lib/format';
-import { PRESENTATION_TYPE_LABELS } from '@/lib/constants';
+import { getPresentationLabel } from '@/lib/presentation';
 import { cn } from '@/lib/cn';
 import type { Presentation, QuantityDiscount } from '@/api/types';
 
@@ -66,8 +66,7 @@ export function PresentationCard({
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-sm font-bold text-slate-900">
-              {PRESENTATION_TYPE_LABELS[presentation.type] ??
-                presentation.type}
+              {getPresentationLabel(presentation)}
             </p>
             {!presentation.isActive && (
               <span className="text-[10px] font-bold uppercase tracking-wide rounded-full px-1.5 py-0.5 bg-slate-100 text-slate-500">
