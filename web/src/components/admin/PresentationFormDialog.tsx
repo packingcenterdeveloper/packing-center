@@ -24,15 +24,12 @@ const TYPE_LABEL: Record<PresentationType, string> = {
 const formSchema = z.object({
   type: z.enum(['unidad', 'paquete', 'bulto', 'caja']),
   sku: z
-    .string()
-    .trim()
-    .max(60, 'Máximo 60 caracteres')
-    .optional()
-    .or(z.literal('')),
-  pricePesos: z.coerce
-    .number()
-    .int('Tiene que ser un número entero')
-    .min(1, 'El precio debe ser mayor a 0'),
+  .string()
+  .trim()
+  .max(60, 'Máximo 60 caracteres')
+  .optional()
+  .or(z.literal('')),
+  pricePesos: z.coerce.number().min(0.01, 'El precio debe ser mayor a 0'),
   stock: z.coerce.number().int().min(0, 'El stock no puede ser negativo'),
   isActive: z.boolean(),
 });
@@ -41,7 +38,7 @@ type FormValues = z.input<typeof formSchema>;
 type FormOutput = z.output<typeof formSchema>;
 
 const inputBase =
-  'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
+'w-full h-11 px-3 rounded-lg border bg-white text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent';
 
 interface PresentationFormDialogProps {
   open: boolean;
@@ -91,7 +88,7 @@ export function PresentationFormDialog({
       });
     } else {
       const availableType =
-        TYPES.find((t) => !existingTypes.includes(t)) ?? 'unidad';
+      TYPES.find((t) => !existingTypes.includes(t)) ?? 'unidad';
       reset({
         type: availableType,
         sku: '',
@@ -106,7 +103,7 @@ export function PresentationFormDialog({
 
   const onSubmit = async (values: FormOutput) => {
     // Convertimos pesos → centavos antes de guardar
-    const priceCents = values.pricePesos * 100;
+    const priceCents = Math.round(values.pricePesos * 100);
 
     try {
       if (isEditing && presentation) {
@@ -133,14 +130,14 @@ export function PresentationFormDialog({
       onClose();
     } catch (err) {
       const message =
-        err instanceof ApiError ? err.message : 'No se pudo guardar';
+      err instanceof ApiError ? err.message : 'No se pudo guardar';
       toast.error(message);
     }
   };
 
   const availableTypes = TYPES.filter(
     (t) => !existingTypes.includes(t) || t === presentation?.type,
-  );
+    );
 
   return (
     <Modal
@@ -164,9 +161,9 @@ export function PresentationFormDialog({
             className={cn(
               'flex-1 h-11 rounded-lg text-sm font-semibold text-white transition-colors',
               submitting
-                ? 'bg-slate-300 cursor-not-allowed'
-                : 'bg-brand active:bg-brand-700',
-            )}
+              ? 'bg-slate-300 cursor-not-allowed'
+              : 'bg-brand active:bg-brand-700',
+              )}
           >
             {submitting ? 'Guardando...' : 'Guardar'}
           </button>
@@ -191,7 +188,7 @@ export function PresentationFormDialog({
                   'has-[:checked]:border-brand has-[:checked]:bg-brand-50 has-[:checked]:text-brand',
                   'border-slate-200 text-slate-700',
                   isEditing && t !== presentation?.type && 'hidden',
-                )}
+                  )}
               >
                 <input
                   type="radio"
@@ -202,14 +199,14 @@ export function PresentationFormDialog({
                 />
                 {TYPE_LABEL[t]}
               </label>
-            ))}
+              ))}
           </div>
           {isEditing && (
             <p className="mt-1.5 text-[11px] text-slate-400">
               El tipo no se puede cambiar. Si necesitás otro, eliminá esta
               presentación y creá una nueva.
             </p>
-          )}
+            )}
         </div>
 
         <div>
@@ -222,13 +219,13 @@ export function PresentationFormDialog({
           <input
             id="pres-price"
             type="number"
-            min={1}
-            step={1}
+            min={0.01}
+            step="0.01"
             {...register('pricePesos')}
             className={cn(
               inputBase,
               errors.pricePesos ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
             placeholder="Ej: 250"
           />
           <p className="mt-1 text-[11px] text-slate-400">
@@ -238,7 +235,7 @@ export function PresentationFormDialog({
             <p className="mt-1 text-xs text-rose-600">
               {errors.pricePesos.message}
             </p>
-          )}
+            )}
         </div>
 
         <div>
@@ -257,13 +254,13 @@ export function PresentationFormDialog({
             className={cn(
               inputBase,
               errors.stock ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
           />
           {errors.stock && (
             <p className="mt-1 text-xs text-rose-600">
               {errors.stock.message}
             </p>
-          )}
+            )}
         </div>
 
         <div>
@@ -280,12 +277,12 @@ export function PresentationFormDialog({
             className={cn(
               inputBase,
               errors.sku ? 'border-rose-300' : 'border-slate-200',
-            )}
+              )}
             placeholder="Ej: VASO-200-CAJ"
           />
           {errors.sku && (
             <p className="mt-1 text-xs text-rose-600">{errors.sku.message}</p>
-          )}
+            )}
         </div>
 
         <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -300,5 +297,5 @@ export function PresentationFormDialog({
         </label>
       </form>
     </Modal>
-  );
+    );
 }
