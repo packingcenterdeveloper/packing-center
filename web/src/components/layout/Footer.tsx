@@ -7,7 +7,7 @@ import {
 import { cn } from '@/lib/cn';
 
 const WHATSAPP_URL = 'https://wa.me/59895301753';
-const CONTACT_EMAIL = 'contacto@packingcenter.uy';
+const CONTACT_EMAIL = 'packingcenter30@gmail.com';
 
 interface FooterLink {
   label: string;
@@ -86,7 +86,7 @@ export function Footer({ className }: FooterProps) {
             </li>
             <li className="inline-flex items-start gap-2.5 text-slate-300">
               <HiOutlineMapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-              <span>ubicacion, Uruguay</span>
+              <span>Progreso, Canelones, Uruguay</span>
             </li>
           </ul>
         </div>

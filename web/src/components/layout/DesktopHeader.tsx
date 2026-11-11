@@ -17,17 +17,22 @@ export function DesktopHeader() {
     (c) => c.slug !== POPULAR_CATEGORY_SLUG,
   ).slice(0, 6); // Mostramos solo las primeras 6 en el nav
 
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 hidden md:block bg-white border-b border-slate-200">
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 hidden md:block bg-white border-b border-slate-200">
       {/* Top Bar */}
-      <div className="bg-slate-900 text-white text-[11px] py-1.5 text-center font-medium tracking-wide">
-        Envíos a todo Uruguay &nbsp;·&nbsp; Comprá por unidad, paquete o bulto
-      </div>
+        <div className="bg-slate-900 text-white text-[11px] py-1.5 text-center font-medium tracking-wide">
+          Envíos a todo Uruguay &nbsp;·&nbsp; Comprá por unidad, paquete, Kilo o bulto
+        </div>
 
       {/* Main Header */}
-      <div className="max-w-8xl mx-auto px-6 py-4 flex items-center justify-between gap-8">
+        <div className="max-w-8xl mx-auto px-6 py-4 flex items-center justify-between gap-8">
         {/* Logo */}
-        <Link to="/" className="flex flex-col items-start shrink-0">
+          <Link to="/" className="flex flex-col items-start shrink-0">
+          <img
+            src="https://i.postimg.cc/Lsfm7X35/Pc-logo-blanco.png"
+            alt="Packing Center"
+            className="h-10 w-auto object-contain"
+          />
           <span className="text-xl font-extrabold tracking-tight text-brand leading-none">
             PACKING
           </span>
@@ -67,7 +72,7 @@ export function DesktopHeader() {
                 <span className="absolute -top-1.5 -right-2 inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-brand text-white text-[9px] font-bold">
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
-              )}
+                )}
             </div>
             <span className="text-[10px] font-semibold">Carrito</span>
           </Link>
@@ -85,7 +90,7 @@ export function DesktopHeader() {
             >
               {cat.name}
             </Link>
-          ))}
+            ))}
           <Link
             to="/categorias"
             className="text-xs font-semibold text-brand ml-auto"
@@ -95,5 +100,5 @@ export function DesktopHeader() {
         </div>
       </div>
     </header>
-  );
-}
+    );
+  }
