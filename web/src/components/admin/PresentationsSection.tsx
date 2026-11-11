@@ -31,7 +31,7 @@ export function PresentationsSection({
   const existingTypes = useMemo(
     () => presentations.map((p) => p.type as PresentationType),
     [presentations],
-  );
+    );
 
   const handleNew = () => {
     setEditing(null);
@@ -51,7 +51,7 @@ export function PresentationsSection({
       setConfirmDelete(null);
     } catch (err) {
       const message =
-        err instanceof ApiError ? err.message : 'No se pudo eliminar';
+      err instanceof ApiError ? err.message : 'No se pudo eliminar';
       toast.error(message);
     }
   };
@@ -98,7 +98,7 @@ export function PresentationsSection({
             </button>
           </div>
         </div>
-      ) : (
+        ) : (
         <div className="space-y-3">
           {presentations.map((presentation) => (
             <PresentationCard
@@ -107,33 +107,41 @@ export function PresentationsSection({
               presentation={presentation}
               onEdit={handleEdit}
               onDelete={setConfirmDelete}
-            />
-          ))}
+              />
+              ))}
         </div>
-      )}
+        )}
 
-      <PresentationFormDialog
-        open={formOpen}
-        productId={productId}
-        presentation={editing}
-        existingTypes={existingTypes}
-        onClose={() => setFormOpen(false)}
-      />
+        <PresentationFormDialog
+          open={formOpen}
+          productId={productId}
+          presentation={editing}
+          existingTypes={existingTypes}
+          onClose={() => setFormOpen(false)}
+        />
 
-      <ConfirmDialog
-        open={Boolean(confirmDelete)}
-        title="Eliminar presentación"
-        description={
-          confirmDelete
-            ? `¿Eliminar la presentación "${{ unidad: 'Unidad', paquete: 'Paquete', bulto: 'Bulto', caja: 'Caja' }[confirmDelete.type]}"? Se eliminan también sus descuentos por cantidad.`
+        <ConfirmDialog
+          open={Boolean(confirmDelete)}
+          title="Eliminar presentación"
+          description={
+            confirmDelete
+            ? `¿Eliminar la presentación "${
+              {
+                unidad: 'Unidad',
+                kg: 'Kilogramo (kg)',
+                paquete: 'Paquete',
+                bulto: 'Bulto',
+                caja: 'Caja',
+              }[confirmDelete.type] ?? confirmDelete.type
+            }"? Se eliminan también sus descuentos por cantidad.`
             : undefined
-        }
-        confirmLabel="Eliminar"
-        variant="danger"
-        loading={deleteMutation.isPending}
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setConfirmDelete(null)}
-      />
-    </section>
-  );
+          }
+          confirmLabel="Eliminar"
+          variant="danger"
+          loading={deleteMutation.isPending}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setConfirmDelete(null)}
+        />
+      </section>
+      );
 }

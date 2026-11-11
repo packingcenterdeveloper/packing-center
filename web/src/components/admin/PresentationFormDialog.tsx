@@ -23,7 +23,7 @@ const TYPE_LABEL: Record<PresentationType, string> = {
 };
 
 const formSchema = z.object({
-  type: z.enum(['unidad', 'paquete', 'bulto', 'caja']),
+  type: z.enum(['unidad', 'kg', 'paquete', 'bulto', 'caja']),
   sku: z
   .string()
   .trim()
