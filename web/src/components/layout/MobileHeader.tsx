@@ -57,13 +57,13 @@ export function MobileHeader() {
           <HiBars3 className="w-6 h-6" />
         </button>
 
-        <Link to="/" className="flex flex-row items-start shrink-0">
+        <Link to="/" className="flex flex-row items-center shrink-0">
           <img
-            src="https://i.postimg.cc/Lsfm7X35/Pc-logo-blanco.png"
+            src="https://i.postimg.cc/FRN1V3Xr/image.png"
             alt="Packing Center"
             className="h-10 w-auto object-contain"
           />
-          <div className="flex flex-col items-start shrink-0">
+          <div className="flex flex-col items-center shrink-0">
             <span className="text-xl font-extrabold tracking-tight text-brand leading-none">
               PACKING
             </span>
