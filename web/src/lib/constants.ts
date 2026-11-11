@@ -48,7 +48,7 @@ export const PAYMENT_METHOD_LABELS: Record<string, string> = {
 export const PRESENTATION_TYPE_LABELS: Record<string, string> = {
   unidad: 'Unidad',
   paquete: 'Paquete',
-  kg: 'Kilogramo (kg)'
+  kg: 'Kilogramo (kg)',
   bulto: 'Bulto',
   caja: 'Caja',
 };
