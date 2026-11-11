@@ -16,6 +16,7 @@ export const PRESENTATION_TYPES = [
   'unidad',
   'paquete',
   'bulto',
+  'kg',
   'caja',
 ] as const;
 

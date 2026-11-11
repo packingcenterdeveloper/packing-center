@@ -12,10 +12,11 @@ import { ApiError } from '@/api/client';
 import { cn } from '@/lib/cn';
 import type { Presentation, PresentationType } from '@/api/types';
 
-const TYPES: PresentationType[] = ['unidad', 'paquete', 'bulto', 'caja'];
+const TYPES: PresentationType[] = ['unidad', 'kg', 'paquete', 'bulto', 'caja'];
 
 const TYPE_LABEL: Record<PresentationType, string> = {
   unidad: 'Unidad',
+  kg: 'Kilogramo (kg)',
   paquete: 'Paquete',
   bulto: 'Bulto',
   caja: 'Caja',

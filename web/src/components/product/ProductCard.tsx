@@ -9,6 +9,7 @@ import type { Presentation, Product } from '@/api/types';
 
 const PRESENTATION_ORDER: Presentation['type'][] = [
   'unidad',
+  'kg',
   'paquete',
   'bulto',
   'caja',

@@ -3,7 +3,7 @@
 // Cambian solo si cambia el schema en el back.
 // ============================================================
 
-export type PresentationType = 'unidad' | 'paquete' | 'bulto' | 'caja';
+export type PresentationType = 'unidad' | 'kg' | 'paquete' | 'bulto' | 'caja';
 
 export type OrderStatus =
   | 'pending'

@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const PRESENTATION_TYPES = [
   'unidad',
   'paquete',
+  'kg',
   'bulto',
   'caja',
 ] as const;

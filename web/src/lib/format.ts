@@ -1,11 +1,12 @@
-/**
- * Convierte centavos (entero) a string formateado en pesos uruguayos.
- * Sin decimales, con separador de miles "." (formato es-UY).
- * Ej: 59000 → "$ 590", 123400 → "$ 1.234"
- */
+
 export function formatCents(cents: number): string {
-  const pesos = Math.round(cents / 100);
-  return `$ ${pesos.toLocaleString('es-UY')}`;
+  const pesos = cents / 100;
+  const hasDecimals = cents % 100 !== 0;
+  
+  return `$ ${pesos.toLocaleString('es-UY', {
+    minimumFractionDigits: hasDecimals ? 2 : 0,
+    maximumFractionDigits: hasDecimals ? 2 : 0,
+  })}`;
 }
 
 /**
