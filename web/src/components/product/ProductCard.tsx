@@ -51,12 +51,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
     >
       <Link
         to={`/productos/${product.slug}`}
-        className="block aspect-square relative"
+        className="block aspect-square relative overflow-hidden bg-slate-100"
       >
         <ProductImage
           src={image?.urlThumb ?? image?.url}
           alt={product.name}
-          className="w-full h-full"
+          className="w-full h-full object-cover"
         />
         {isOutOfStock && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center">

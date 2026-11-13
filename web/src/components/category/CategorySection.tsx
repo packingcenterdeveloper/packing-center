@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { HiArrowRight } from 'react-icons/hi2';
+import useEmblaCarousel from 'embla-carousel-react';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useProducts } from '@/hooks/queries/useProducts';
 import type { Category } from '@/api/types';
@@ -12,13 +13,15 @@ const PRODUCTS_LIMIT = 5;
 
 function CardSkeleton() {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-      <div className="aspect-square bg-slate-100 animate-pulse" />
-      <div className="p-3 space-y-2">
-        <div className="h-3 w-3/4 rounded bg-slate-100 animate-pulse" />
-        <div className="h-3 w-1/3 rounded bg-slate-100 animate-pulse" />
-        <div className="h-4 w-1/2 rounded bg-slate-100 animate-pulse" />
-        <div className="h-9 rounded-lg bg-slate-100 animate-pulse" />
+    <div className="flex-[0_0_auto] w-[calc(50%-6px)] sm:w-[calc(33.33%-8px)] lg:w-[calc(20%-10px)]">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+        <div className="aspect-square bg-slate-100 animate-pulse" />
+        <div className="p-3 space-y-2">
+          <div className="h-3 w-3/4 rounded bg-slate-100 animate-pulse" />
+          <div className="h-3 w-1/3 rounded bg-slate-100 animate-pulse" />
+          <div className="h-4 w-1/2 rounded bg-slate-100 animate-pulse" />
+          <div className="h-9 rounded-lg bg-slate-100 animate-pulse" />
+        </div>
       </div>
     </div>
   );
@@ -32,7 +35,13 @@ export function CategorySection({ category }: CategorySectionProps) {
 
   const products = data?.data ?? [];
 
-  // Si no hay productos y ya terminó de cargar, no mostramos la sección
+  // Opciones de Embla: arrastre libre, sin flechas ni auto-scroll
+  const [emblaRef] = useEmblaCarousel({
+    align: 'start',
+    dragFree: true,
+    containScroll: 'trimSnaps',
+  });
+
   if (!isLoading && products.length === 0) return null;
 
   return (
@@ -50,14 +59,23 @@ export function CategorySection({ category }: CategorySectionProps) {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-        {isLoading
-          ? Array.from({ length: PRODUCTS_LIMIT }).map((_, i) => (
-              <CardSkeleton key={i} />
-            ))
-          : products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+      {/* Contenedor del carrusel (viewport) */}
+      <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
+        {/* Track (contenedor flex) */}
+        <div className="flex gap-3 md:gap-4 -ml-3 md:-ml-4">
+          {isLoading
+            ? Array.from({ length: PRODUCTS_LIMIT }).map((_, i) => (
+                <CardSkeleton key={i} />
+              ))
+            : products.map((product) => (
+                <div
+                  key={product.id}
+                  className="flex-[0_0_auto] w-[calc(50%-6px)] sm:w-[calc(33.33%-8px)] lg:w-[calc(20%-10px)] min-w-0 pl-3 md:pl-4"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+        </div>
       </div>
     </section>
   );
