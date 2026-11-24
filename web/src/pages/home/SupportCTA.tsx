@@ -5,7 +5,12 @@ const WHATSAPP_URL = 'https://wa.me/59895301753';
 export function SupportCTA() {
   return (
     <section className="md:mt-8 mt-0 md:px-0 px-4">
-      <div className="rounded-2xl bg-brand text-white p-5 flex flex-col items-center text-center">
+      <div
+        className="rounded-2xl bg-cover bg-center bg-no-repeat text-white p-5 flex flex-col items-center text-center"
+        style={{
+          backgroundImage: "url('https://i.postimg.cc/gJCkP9FN/c2.png')",
+        }}
+      >
         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-3">
           <HiOutlineChatBubbleLeftRight className="w-6 h-6" />
         </div>

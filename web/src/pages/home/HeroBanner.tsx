@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { HiArrowRight } from 'react-icons/hi2';
 
-const HERO_IMAGE = 'https://i.postimg.cc/CxrNXwL0/Tubos.jpg';
+const HERO_IMAGE = 'https://i.postimg.cc/RFXNrpCY/pc1.png';
 
 export function HeroBanner() {
   return (
