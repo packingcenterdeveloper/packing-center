@@ -5,7 +5,7 @@ const HERO_IMAGE = 'https://i.postimg.cc/RFXNrpCY/pc1.png';
 
 export function HeroBanner() {
   return (
-    <section className="relative rounded-2xl mx-0 mt-3 bg-slate-900">
+    <section className="relative mx-0 mt-3 bg-slate-900">
       <img
         src={HERO_IMAGE}
         alt=""
