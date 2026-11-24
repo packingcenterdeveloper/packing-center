@@ -81,7 +81,7 @@ export function DesktopHeader() {
       </div>
 
       {/* Nav Bar */}
-      <div className="border-t border-slate-100 bg-slate-50/50">
+      <div className="py-1 border-t border-slate-100 bg-slate-50/50">
         <div className="max-w-8xl mx-auto px-6 flex items-center gap-8 h-11">
           {navCategories.map((cat) => (
             <Link
