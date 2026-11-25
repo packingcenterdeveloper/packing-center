@@ -210,7 +210,7 @@ export function ProductPage() {
         <div className="flex items-start gap-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-600">
           <HiOutlineTruck className="w-4 h-4 shrink-0 mt-0.5 text-slate-500" />
           <span>
-            Envío por DAC a todo el país. En Montevideo y algunas ciudades
+            Envío por DAC a todo el país. En algunas ciudades
             de Canelones es gratis.
           </span>
         </div>

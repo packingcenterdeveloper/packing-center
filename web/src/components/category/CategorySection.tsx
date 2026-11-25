@@ -13,8 +13,8 @@ const PRODUCTS_LIMIT = 5;
 
 function CardSkeleton() {
   return (
-    <div className="flex-[0_0_auto] w-[calc(50%-6px)] sm:w-[calc(33.33%-8px)] lg:w-[calc(20%-10px)]">
-      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+    <div className="flex-[0_0_auto] w-[calc(50%-4px)] sm:w-[calc(33.333%-5.33px)] lg:w-[calc(20%-6.4px)]">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden h-full">
         <div className="aspect-square bg-slate-100 animate-pulse" />
         <div className="p-3 space-y-2">
           <div className="h-3 w-3/4 rounded bg-slate-100 animate-pulse" />
@@ -24,7 +24,7 @@ function CardSkeleton() {
         </div>
       </div>
     </div>
-  );
+    );
 }
 
 export function CategorySection({ category }: CategorySectionProps) {
@@ -60,23 +60,24 @@ export function CategorySection({ category }: CategorySectionProps) {
       </div>
 
       {/* Contenedor del carrusel (viewport) */}
-      <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
-        {/* Track (contenedor flex) */}
-        <div className="flex gap-3 md:gap-4 -ml-3 md:-ml-4">
+      <div
+        className="overflow-hidden cursor-grab active:cursor-grabbing"
+        ref={emblaRef}>
+        <div className="flex gap-2 items-stretch">
           {isLoading
-            ? Array.from({ length: PRODUCTS_LIMIT }).map((_, i) => (
-                <CardSkeleton key={i} />
-              ))
-            : products.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex-[0_0_auto] w-[calc(50%-6px)] sm:w-[calc(33.33%-8px)] lg:w-[calc(20%-10px)] min-w-0 pl-3 md:pl-4"
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))}
+          ? Array.from({ length: PRODUCTS_LIMIT }).map((_, i) => (
+            <CardSkeleton key={i} />
+            ))
+          : products.map((product) => (
+            <div
+              key={product.id}
+              className="flex-[0_0_auto] w-[calc(50%-4px)] sm:w-[calc(33.333%-5.33px)] lg:w-[calc(20%-6.4px)]"
+            >
+              <ProductCard product={product} />
+            </div>
+            ))}
         </div>
       </div>
     </section>
-  );
+    );
 }

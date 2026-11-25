@@ -4,6 +4,7 @@ import { Price } from '@/components/common/Price';
 import { ProductImage } from '@/components/common/ProductImage';
 import { useAddToCart } from '@/hooks/useAddToCart';
 import { getPresentationLabel } from '@/lib/presentation';
+import { PRESENTATION_TYPE_LABELS } from '@/lib/constants';
 import { cn } from '@/lib/cn';
 import type { Presentation, Product } from '@/api/types';
 
@@ -26,6 +27,29 @@ function pickDefaultPresentation(
   return presentations[0] ?? null;
 }
 
+interface DiscountBadge {
+  percent: number;
+  presentationType: Presentation['type'];
+}
+
+function collectDiscounts(
+  presentations: Presentation[] | undefined,
+): DiscountBadge[] {
+  if (!presentations) return [];
+  return presentations
+    .filter((p) => p.isActive)
+    .flatMap((p) =>
+      (p.quantityDiscounts ?? [])
+        .filter((d) => d.isActive)
+        .map((d) => ({
+          percent: d.percent,
+          presentationType: p.type,
+        })),
+    )
+    .sort((a, b) => b.percent - a.percent)
+    .slice(0, 3);
+}
+
 interface ProductCardProps {
   product: Product;
   className?: string;
@@ -41,11 +65,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
     : 0;
 
   const isOutOfStock = !presentation || available <= 0;
+  const discounts = collectDiscounts(product.presentations);
 
   return (
     <div
       className={cn(
-        'flex flex-col rounded-xl border border-slate-200 bg-white overflow-hidden',
+        'flex flex-col h-full rounded-xl border border-slate-200 bg-white overflow-hidden',
         className,
       )}
     >
@@ -58,6 +83,22 @@ export function ProductCard({ product, className }: ProductCardProps) {
           alt={product.name}
           className="w-full h-full object-cover"
         />
+
+        {discounts.length > 0 && (
+          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1 items-start">
+            {discounts.map((d, i) => (
+              <span
+                key={`${d.presentationType}-${d.percent}-${i}`}
+                className="inline-flex items-center text-[10px] font-bold text-white bg-emerald-600 px-1.5 py-0.5 rounded shadow-sm"
+              >
+                {d.percent}% OFF en{' '}
+                {PRESENTATION_TYPE_LABELS[d.presentationType] ??
+                  d.presentationType}
+              </span>
+            ))}
+          </div>
+        )}
+
         {isOutOfStock && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
             <span className="text-xs font-semibold text-slate-500 bg-white px-3 py-1 rounded-full border border-slate-200">
@@ -69,7 +110,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
       <div className="flex-1 flex flex-col p-3 gap-1">
         <Link to={`/productos/${product.slug}`}>
-          <h3 className="text-sm font-semibold text-slate-900 leading-tight line-clamp-2">
+          <h3 className="text-sm font-semibold text-slate-900 leading-tight line-clamp-2 min-h-[2.5rem]">
             {product.name}
           </h3>
         </Link>
@@ -81,7 +122,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
         )}
 
         {presentation && (
-          <Price cents={presentation.priceCents} size="lg" className="mt-1" />
+          <Price cents={presentation.priceCents} size="lg" />
         )}
 
         <button
@@ -92,7 +133,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
             addToCart(presentation.id, 1, product.name);
           }}
           className={cn(
-            'mt-2 inline-flex items-center justify-center gap-2 h-9 rounded-lg text-xs font-semibold transition-colors',
+            'mt-auto inline-flex items-center justify-center gap-2 h-9 rounded-lg text-xs font-semibold transition-colors',
             isOutOfStock
               ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
               : 'bg-brand text-white active:bg-brand-700',

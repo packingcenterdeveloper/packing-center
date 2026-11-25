@@ -19,7 +19,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: '¿Hacen envíos a todo el país?',
     answer:
-      'Sí, enviamos a todo Uruguay. En Montevideo y algunas ciudades de Canelones el envío es gratis. Al resto del país llega por DAC, con el costo a cobrar al retirar.',
+      'Sí, enviamos a todo Uruguay. En algunas ciudades de Canelones el envío es gratis (Progreso, 18 de Mayo, Las Piedras y La Paz). Al resto del país llega por DAC, con el costo a cobrar al retirar.',
   },
   {
     question: '¿Cómo funciona el stock?',
